@@ -1,4 +1,5 @@
 import pygame
+import random
 
 class LoadingPage:
     def __init__(self, screen):
@@ -23,7 +24,18 @@ class LoadingPage:
         self.YELLOW = (255, 255, 100)
         self.WHITE = (255, 255, 255)
         self.font = pygame.font.Font(None, 36)
-        self.word_of_the_day = "Claustrophobic"
+
+        # List of words that fit the narrative
+        self.words_of_the_day = [
+            "Claustrophobic", "Enigma", "Labyrinth", "Mystic", "Ephemeral",
+            "Ethereal", "Serendipity", "Pandemonium", "Paradox", "Vortex",
+            "Oblivion", "Abyss", "Quagmire", "Eclipse", "Nebula",
+            "Chimera", "Phantom", "Reverie", "Mirage", "Specter"
+        ]
+
+        # Randomly select a word of the day
+        self.word_of_the_day = random.choice(self.words_of_the_day)
+
         self.shadow = self.logo.copy()
         self.shadow.fill((0, 0, 0, 50), special_flags=pygame.BLEND_RGBA_MULT)
 
@@ -44,7 +56,7 @@ class LoadingPage:
         loading_text = self.font.render("LOADING...", True, self.WHITE)
         text_x = self.bar_x + (self.bar_width - loading_text.get_width()) // 2
         text_y = self.bar_y + (self.bar_height - loading_text.get_height()) // 2
-        shadow_text = self.font.render("LOADING...", True, (0,0,0))
+        shadow_text = self.font.render("LOADING...", True, (0, 0, 0))
 
         self.screen.blit(shadow_text, (text_x + 2, text_y + 2))
         self.screen.blit(loading_text, (text_x, text_y))
