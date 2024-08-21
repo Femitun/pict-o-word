@@ -28,11 +28,15 @@ class HomePage:
     def setup_colors(self):
         self.WHITE = (255, 255, 255)
         self.BLACK = (0, 0, 0)
-        self.GREEN = (0, 255, 0)
-        self.YELLOW = (255, 255, 0)
-        self.RED = (255, 0, 0)
-        self.PINK = (255, 105, 180)
-        self.LIGHT_BLUE = (173, 216, 230)
+        self.GREEN = (0, 127.5 * 0.75, 0)
+        self.YELLOW = (255 * 0.65, 255 * 0.65, 0)
+        self.RED = (127.5 * 0.75, 0, 0)
+        self.PINK = (127.5 * 0.9, 52.5 * 0.9, 90 * 0.9)
+        self.LIGHT_BLUE = (86.5 * 0.75, 108 * 0.75, 115 * 0.75)
+        self.PALEYELLOW = (225 * 0.75, 225 * 0.75, 100 * 0.75)
+        self.YELLOW1 = (255, 255, 0)
+        self.PINK1 = (225 * 0.85, 105 * 0.85, 180 * 0.85)
+
 
     def setup_fonts(self):
         self.title_font = pygame.font.Font(None, 48)
@@ -91,39 +95,47 @@ class HomePage:
 
     def draw_mode_button(self):
         colors = {"EASY": self.GREEN, "MEDIUM": self.YELLOW, "HARD": self.RED}
-        self.draw_circle_with_shadow(self.screen, colors[self.current_mode], (self.width // 2, 200), 50)
-        mode_text = self.button_font.render(self.current_mode, True, self.BLACK)
-        mode_rect = mode_text.get_rect(center=(self.width // 2, 200))
+        # Adjusted y-coordinate to move the button down
+        y_pos = 330
+        self.draw_circle_with_shadow(self.screen, colors[self.current_mode], (self.width // 2, y_pos), 50)
+        mode_text = self.button_font.render(self.current_mode, True, self.WHITE)
+        mode_rect = mode_text.get_rect(center=(self.width // 2, y_pos))
         self.screen.blit(mode_text, mode_rect)
 
         if self.current_mode != "EASY":
             pygame.draw.polygon(self.screen, self.WHITE,
-                                [(self.width // 2 - 80, 200), (self.width // 2 - 60, 190), (self.width // 2 - 60, 210)])
+                                [(self.width // 2 - 80, y_pos), (self.width // 2 - 60, y_pos - 10), (self.width // 2 - 60, y_pos + 10)])
         if self.current_mode != "HARD":
             pygame.draw.polygon(self.screen, self.WHITE,
-                                [(self.width // 2 + 80, 200), (self.width // 2 + 60, 190), (self.width // 2 + 60, 210)])
+                                [(self.width // 2 + 80, y_pos), (self.width // 2 + 60, y_pos - 10), (self.width // 2 + 60, y_pos + 10)])
 
     def draw_play_button(self):
-        self.draw_rect_with_shadow(self.screen, self.PINK, (self.width // 2 - 60, 300, 120, 40), border_radius=10)
+        # Adjusted y-coordinate to move the button further down
+        y_pos = 430
+        # Increase the size of the rectangle
+        self.draw_rect_with_shadow(self.screen, self.PALEYELLOW, (self.width // 2 - 90, y_pos, 180, 60), border_radius=15)
         play_text = self.button_font.render("PLAY", True, self.WHITE)
-        play_rect = play_text.get_rect(center=(self.width // 2, 320))
+        play_rect = play_text.get_rect(center=(self.width // 2, y_pos + 30))
         self.screen.blit(play_text, play_rect)
 
     def draw_exit_button(self):
-        self.draw_rect_with_shadow(self.screen, self.PINK, (self.width // 2 - 60, 370, 120, 40), border_radius=10)
+        # Adjusted y-coordinate to move the button further down
+        y_pos = 530
+        # Increase the size of the rectangle
+        self.draw_rect_with_shadow(self.screen, self.PINK1, (self.width // 2 - 90, y_pos, 180, 60), border_radius=15)
         exit_text = self.button_font.render("EXIT", True, self.WHITE)
-        exit_rect = exit_text.get_rect(center=(self.width // 2, 390))
+        exit_rect = exit_text.get_rect(center=(self.width // 2, y_pos + 30))
         self.screen.blit(exit_text, exit_rect)
 
     def draw_settings_icon(self):
-        self.draw_circle_with_shadow(self.screen, self.PINK, (40, 40), 20)
+        self.draw_circle_with_shadow(self.screen, self.PINK1, (40, 40), 20)
         for i in range(3):
             y = 33 + i * 7
             pygame.draw.line(self.screen, self.WHITE, (30, y), (50, y), 2)
 
     def draw_coin_counter(self):
-        self.draw_rect_with_shadow(self.screen, self.PINK, (self.width - 130, 20, 110, 40), border_radius=20)
-        pygame.draw.circle(self.screen, self.YELLOW, (self.width - 110, 40), 15)
+        self.draw_rect_with_shadow(self.screen, self.PINK1, (self.width - 130, 20, 110, 40), border_radius=20)
+        pygame.draw.circle(self.screen, self.YELLOW1, (self.width - 110, 40), 15)
         pygame.draw.circle(self.screen, self.BLACK, (self.width - 110, 40), 15, 2)
         coin_text = self.button_font.render("50", True, self.WHITE)
         coin_rect = coin_text.get_rect(center=(self.width - 60, 40))
@@ -149,24 +161,33 @@ class HomePage:
         self.screen.blit(settings_surface, (self.width // 2 - 150, self.height // 2 - 200))
 
     def handle_event(self, event):
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            mouse_pos = pygame.mouse.get_pos()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
 
-            if self.settings_open:
-                if not self.is_point_inside(mouse_pos, (self.width // 2 - 150, self.height // 2 - 200, 300, 400)):
-                    self.settings_open = False
-            else:
-                if self.is_point_inside(mouse_pos, (self.width // 2 + 60, 190, 20, 20)):
-                    self.cycle_mode(1)
-                elif self.is_point_inside(mouse_pos, (self.width // 2 - 80, 190, 20, 20)):
-                    self.cycle_mode(-1)
-                elif self.is_point_inside(mouse_pos, (20, 20, 40, 40)):
-                    self.settings_open = True
-                elif self.is_point_inside(mouse_pos, (self.width // 2 - 60, 300, 120, 40)):
-                    print("Play button clicked")  # Replace with actual play logic
-                elif self.is_point_inside(mouse_pos, (self.width // 2 - 60, 370, 120, 40)):
-                    pygame.quit()
-                    quit()
+                if self.settings_open:
+                    if not self.is_point_inside(mouse_pos, (self.width // 2 - 150, self.height // 2 - 200, 300, 400)):
+                        self.settings_open = False
+                else:
+                    y_pos = 330  # Adjust to match the new y-position for the mode button
+
+                    # Check for right arrow (next mode)
+                    if self.is_point_inside(mouse_pos, (self.width // 2 + 60, y_pos - 10, 20, 20)):
+                        self.cycle_mode(1)
+                    # Check for left arrow (previous mode)
+                    elif self.is_point_inside(mouse_pos, (self.width // 2 - 80, y_pos - 10, 20, 20)):
+                        self.cycle_mode(-1)
+                    # Check for settings icon
+                    elif self.is_point_inside(mouse_pos, (20, 20, 40, 40)):
+                        self.settings_open = True
+                    # Check for play button
+                    elif self.is_point_inside(mouse_pos, (self.width // 2 - 90, 450, 180, 60)):
+                        print("Play button clicked")  # Replace with actual play logic
+                    # Check for exit button
+                    elif self.is_point_inside(mouse_pos, (self.width // 2 - 90, 530, 180, 60)):
+                        pygame.quit()
+                        quit()
+
+
 
     def is_point_inside(self, point, rect):
         x, y = point
