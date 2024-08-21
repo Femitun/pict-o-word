@@ -24,28 +24,6 @@ A7 =  (706+6, 430+4)
 A8 =  (750+6, 430+4)
 A9 =  (794+6, 430+4)
 
-#Template
-
-# Top 8 40px
-T1 = (466+6, 520+4)
-T2 = (510+6, 520+4)
-T3 = (554+6, 520+4)
-T4 = (598+6, 520+4)
-T5 = (642+6, 520+4)
-T6 = (686+6, 520+4)
-T7 = (730+6, 520+4)
-T8 = (774+6, 520+4)
-
-# Bottom 8 40px
-B1 = (466+6, 564+4)
-B2 = (510+6, 564+4)
-B3 = (554+6, 564+4)
-B4 = (598+6, 564+4)
-B5 = (642+6, 564+4)
-B6 = (686+6, 564+4)
-B7 = (730+6, 564+4)
-B8 = (774+6, 564+4)
-
 #Pictures
 picture_one = pygame.image.load("Hard mode/Adventure/a.jpg")
 picture_two = pygame.image.load("Hard mode/Adventure/b.jpg")
@@ -55,6 +33,36 @@ logo = pygame.image.load("logs-removebg-preview.png")
 emp = pygame.image.load("sav.jpg")
 
 class Boxes:
+    # Template
+
+    # Top 8 40px
+    T1 = (466 + 6, 520 + 4)
+    T2 = (510 + 6, 520 + 4)
+    T3 = (554 + 6, 520 + 4)
+    T4 = (598 + 6, 520 + 4)
+    T5 = (642 + 6, 520 + 4)
+    T6 = (686 + 6, 520 + 4)
+    T7 = (730 + 6, 520 + 4)
+    T8 = (774 + 6, 520 + 4)
+
+    # Bottom 8 40px
+    B1 = (466 + 6, 564 + 4)
+    B2 = (510 + 6, 564 + 4)
+    B3 = (554 + 6, 564 + 4)
+    B4 = (598 + 6, 564 + 4)
+    B5 = (642 + 6, 564 + 4)
+    B6 = (686 + 6, 564 + 4)
+    B7 = (730 + 6, 564 + 4)
+    B8 = (774 + 6, 564 + 4)
+    #Text T
+    text_X = []
+    text_Y = []
+    text = []
+    num_of_text = 1
+
+    for h in range(num_of_text):
+        text.append("A")
+
     #white boxes
     boxX = [466, 510, 554, 598, 642, 686, 730, 774, 466, 510, 554, 598, 642, 686, 730, 774]
     boxY = [520, 520, 520, 520, 520, 520, 520, 520, 564, 564, 564, 564, 564, 564, 564, 564]
@@ -73,8 +81,18 @@ class Boxes:
     for j in range(num_of_black_boxes):
         black_box.append(pygame.image.load("sav.jpg"))
 
+    #Answer boxes
+    answer_boxX = [442, 486, 530, 574, 618, 662, 706, 750, 794]
+    answer_boxY = [430, 430, 430, 430, 430, 430, 430, 430, 430]
+    answer_box = []
+    num_of_answer_boxes = 9
+
+    for k in range(num_of_answer_boxes):
+        answer_box.append(pygame.image.load("sav.jpg"))
+
     box_rects = [pygame.Rect(x, y, 40, 40) for x, y in zip(boxX, boxY)]
     black_box_rects = [pygame.Rect(x, y, 40, 40) for x, y in zip(black_boxX, black_boxY)]
+    answer_box_rects = [pygame.Rect(x, y, 40, 40) for x, y in zip(answer_boxX, answer_boxY)]
 
     movement_positions = {
         0: (442, 430),
@@ -89,15 +107,30 @@ class Boxes:
         # add more positions for other boxes
     }
 
+    back_value = []
+
     count = 0
 
     @staticmethod
     def clicks(mouse_pos):
         for i, rect in enumerate(Boxes.box_rects):
-            if rect.collidepoint(mouse_pos) and Boxes.count < len(Boxes.movement_positions):
+            if rect.collidepoint(mouse_pos) and Boxes.count < len(Boxes.movement_positions) and mouse_pos[1] > 490:
                 pos = Boxes.movement_positions[Boxes.count]
                 Boxes.box_rects[i] = pygame.Rect(*pos, 40, 40)
                 Boxes.count += 1
+                Boxes.back_value.append(i)
+                print(Boxes.count)
+                if i == 0:
+                    Boxes.T1 = (442+6, 430+4)
+                return
+
+    def back(mouse_pos):
+        for i, rect in enumerate(Boxes.box_rects):
+            if rect.collidepoint(mouse_pos) and Boxes.count > len(Boxes.back_value) and mouse_pos[0] <490:
+                post = Boxes.back_value[Boxes.count]
+                Boxes.box_rects[i] = pygame.Rect(*post, 40, 40)
+                Boxes.count -= 1
+                print(Boxes.count)
                 return
 
 
@@ -159,19 +192,11 @@ while running:
     screen.blit(picture_three, (488, 252))
     screen.blit(picture_four, (642, 252))
 
-    #Question Boxes
-    #Adventure Space       -44
-    screen.blit(emp, (A1))
-    screen.blit(emp, (486, 430))
-    screen.blit(emp, (530, 430))
-    screen.blit(emp, (574, 430))
-    screen.blit(emp, (618, 430))
-    screen.blit(emp, (662, 430))
-    screen.blit(emp, (706, 430))
-    screen.blit(emp, (750, 430))
-    screen.blit(emp, (794, 430))
 
     #Top 8 40px            44
+    for k, rect in enumerate(zip(Boxes.answer_box_rects)):
+        screen.blit(Boxes.answer_box[k], rect)
+
     for j, rect in enumerate(zip(Boxes.black_box_rects)):
         screen.blit(Boxes.black_box[j], rect)
 
@@ -181,22 +206,22 @@ while running:
     #Bottom 8 40px
     # ...
 
-    screen.blit(ans_one, T1)
-    screen.blit(ans_two, B6)
-    screen.blit(ans_three, T4)
-    screen.blit(ans_four, B1)
-    screen.blit(ans_five, T5)
-    screen.blit(ans_six, B8)
-    screen.blit(ans_seven, B2)
-    screen.blit(ans_eight, T3)
-    screen.blit(ans_nine, T7)
-    screen.blit(others_one, B3)
-    screen.blit(others_two, T8)
-    screen.blit(others_three, B7)
-    screen.blit(others_four, T2)
-    screen.blit(others_five, T6)
-    screen.blit(others_six, B5)
-    screen.blit(others_seven, B4)
+    screen.blit(ans_one, Boxes.T1)
+    screen.blit(ans_two, Boxes.B6)
+    screen.blit(ans_three, Boxes.T4)
+    screen.blit(ans_four, Boxes.B1)
+    screen.blit(ans_five, Boxes.T5)
+    screen.blit(ans_six, Boxes.B8)
+    screen.blit(ans_seven, Boxes.B2)
+    screen.blit(ans_eight, Boxes.T3)
+    screen.blit(ans_nine, Boxes.T7)
+    screen.blit(others_one, Boxes.B3)
+    screen.blit(others_two, Boxes.T8)
+    screen.blit(others_three, Boxes.B7)
+    screen.blit(others_four, Boxes.T2)
+    screen.blit(others_five, Boxes.T6)
+    screen.blit(others_six, Boxes.B5)
+    screen.blit(others_seven, Boxes.B4)
 
     # flip() the display to put your work on screen
     pygame.display.flip()
