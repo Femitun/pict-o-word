@@ -6,8 +6,8 @@ class LoadingPage:
         self.screen = screen
         self.width, self.height = screen.get_size()
         self.clock = pygame.time.Clock()
-        self.bg = pygame.image.load("t.png")
-        self.logo = pygame.image.load("Logo transparent4.png")
+        self.bg = pygame.image.load("t1.png")
+        self.logo = pygame.image.load("Logo3.png")
         self.bg = pygame.transform.scale(self.bg, (self.width, self.height))
 
         self.logo_rect = self.logo.get_rect()

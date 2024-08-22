@@ -16,7 +16,7 @@ class HomePage:
         self.load_icons()
 
         # Load the logo
-        self.logo = pygame.image.load("Logo transparent4.png")
+        self.logo = pygame.image.load("Logo4.png")
         self.logo_rect = self.logo.get_rect()
         self.logo_rect.centerx = self.width // 2
         self.logo_rect.y = 50

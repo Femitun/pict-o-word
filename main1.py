@@ -12,7 +12,7 @@ class Game:
         pygame.display.set_caption("Pict-o-word")
 
         self.clock = pygame.time.Clock()
-        self.bg = pygame.image.load("t.png")
+        self.bg = pygame.image.load("t1.png")
         self.bg = pygame.transform.scale(self.bg, (self.width, self.height))
 
         self.loading_page = LoadingPage(self.screen)

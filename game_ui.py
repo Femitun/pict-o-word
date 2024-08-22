@@ -7,7 +7,7 @@ class GameUI:
         self.width, self.height = self.screen.get_size()
         self.clock = pygame.time.Clock()
 
-        self.bg = pygame.image.load("t.png")
+        self.bg = pygame.image.load("t1.png")
         self.bg = pygame.transform.scale(self.bg, (self.width, self.height))
 
 
