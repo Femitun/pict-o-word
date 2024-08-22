@@ -1,7 +1,7 @@
 import pygame
 from loading_page import LoadingPage
 from home_page import HomePage
-
+from game_ui import GameUI  # Import the GameUI class
 
 class Game:
     def __init__(self):
@@ -17,6 +17,9 @@ class Game:
 
         self.loading_page = LoadingPage(self.screen)
         self.home_page = HomePage(self.screen, self.bg)
+        self.game_ui = GameUI(self.screen, self.bg)
+        # Initialize GameUI but don't show it yet
+        self.game_ui = None
         self.current_page = "loading"
 
     def run(self):
@@ -26,6 +29,8 @@ class Game:
                 if event.type == pygame.QUIT:
                     running = False
                 self.handle_event(event)
+
+
 
             self.update()
             self.draw()
@@ -40,6 +45,8 @@ class Game:
             self.loading_page.handle_event(event)
         elif self.current_page == "home":
             self.home_page.handle_event(event)
+        elif self.current_page == "game_ui":
+            self.game_ui.handle_event(event)
 
     def update(self):
         if self.current_page == "loading":
@@ -48,12 +55,19 @@ class Game:
                 self.current_page = "home"
         elif self.current_page == "home":
             self.home_page.update()
+            if self.home_page.selection_made:
+                self.game_ui = GameUI(self.screen, self.home_page.selected_mode)  # Use the selected mode
+                self.current_page = "game_ui"
+        elif self.current_page == "game_ui":
+            self.game_ui.update()
 
     def draw(self):
         if self.current_page == "loading":
             self.loading_page.draw()
         elif self.current_page == "home":
             self.home_page.draw()
+        elif self.current_page == "game_ui":
+            self.game_ui.draw()
 
 
 if __name__ == "__main__":

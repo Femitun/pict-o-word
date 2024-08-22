@@ -47,6 +47,10 @@ class HomePage:
         self.last_click_time = 0
         self.feedback_rect = None
 
+        # Track if a selection has been made
+        self.selection_made = False  # Initialize to False
+        self.selected_mode = None  # Store the selected mode when "Play" is clicked
+
     def setup_colors(self):
         self.WHITE = (255, 255, 255)
         self.BLACK = (0, 0, 0)
@@ -243,7 +247,9 @@ class HomePage:
                     self.settings_open = True
                 # Check for play button
                 elif self.is_point_inside(mouse_pos, (self.width // 2 - 90, 450, 180, 60)):
-                    print("Play button clicked")  # Replace with actual play logic
+                    print("Play button clicked")
+                    self.selection_made = True  # Update selection_made when "Play" is clicked
+                    self.selected_mode = self.current_mode  # Store the selected mode
                 # Check for exit button
                 elif self.is_point_inside(mouse_pos, (self.width // 2 - 90, 530, 180, 60)):
                     pygame.quit()
