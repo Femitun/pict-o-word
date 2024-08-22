@@ -186,10 +186,11 @@ class HomePage:
 
         self.screen.blit(settings_surface, (self.width // 2 - 150, self.height // 2 - 200))
 
-
     def draw_help_text(self):
-        help_surface = pygame.Surface((self.width, 150), pygame.SRCALPHA)
-        help_surface.fill((0, 0, 0, 200))  # Increase transparency for better readability
+        help_surface_height = 150
+        help_surface = pygame.Surface((self.width, help_surface_height), pygame.SRCALPHA)
+        help_surface.fill((0, 0, 0, 200))  # Semi-transparent black background
+
         help_text_lines = [
             "This is a 4 Pics 1 Word game.",
             "Tap the volume slider to adjust the volume.",
@@ -197,19 +198,25 @@ class HomePage:
             "Each puzzle shows four pictures that have one word in common.",
             "Use the letters provided to guess the word."
         ]
+        y_offset = 10  # Start drawing text from this y-coordinate within help_surface
+        line_spacing = 30  # Space between lines of text
+
         for i, line in enumerate(help_text_lines):
             help_text = self.help_font.render(line, True, self.WHITE)
-            help_rect = help_text.get_rect(center=(self.width // 2, self.height // 2 - 50 + i * 30))
+            help_rect = help_text.get_rect(center=(self.width // 2, y_offset + i * line_spacing))
             help_surface.blit(help_text, help_rect)
-        self.screen.blit(help_surface, (0, self.height - 250))
+
+        # Blit the help surface onto the screen, positioned at the bottom
+        self.screen.blit(help_surface, (0, self.height - help_surface_height))
 
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
             mouse_pos = pygame.mouse.get_pos()
 
             if self.settings_open:
-                if not self.is_point_inside(mouse_pos, (self.width // 2 - 150, self.height // 2 - 200, 300, 400)):
+                if not self.is_point_inside(mouse_pos, (self.width // 2 - 150, self.height // 2 - 200, 300, 300)):
                     self.settings_open = False
+                    self.help_text = None # Clear the help text when closing settings
                 else:
                     self.handle_settings_click(mouse_pos)
             else:

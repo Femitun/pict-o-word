@@ -10,6 +10,7 @@ class GameUI:
         self.bg = pygame.image.load("t1.png")
         self.bg = pygame.transform.scale(self.bg, (self.width, self.height))
 
+        self.back_arrow_rect = pygame.Rect(20, 20, 50, 50)
 
         # Colors
         self.panel_color = (255, 235, 153)  # Light yellow
@@ -50,6 +51,10 @@ class GameUI:
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
             mouse_pos = event.pos
+
+            if self.back_arrow_rect.collidepoint(mouse_pos):
+                self.go_back()
+
             for i, button_rect in enumerate(self.buttons):
                 if button_rect.collidepoint(mouse_pos):
                     print(f"Game {i + 1} selected in {self.mode.capitalize()} mode.")
@@ -58,9 +63,22 @@ class GameUI:
     def update(self):
         pass
 
+    def go_back(self):
+        print("Going back to the home page...")
+        # Here you would typically change the state or scene, e.g., self.manager.change_state("HOME")
+
     def draw(self):
 
         self.screen.blit(self.bg, (0, 0))
+
+        # Draw the back arrow
+        arrow_color = (255, 255, 255)  # White arrow
+        arrow_points = [
+            (self.back_arrow_rect.left + self.back_arrow_rect.width // 3, self.back_arrow_rect.centery),
+            (self.back_arrow_rect.right - self.back_arrow_rect.width // 3, self.back_arrow_rect.top),
+            (self.back_arrow_rect.right - self.back_arrow_rect.width // 3, self.back_arrow_rect.bottom)
+        ]
+        pygame.draw.polygon(self.screen, arrow_color, arrow_points)
 
 
         # Draw panel
