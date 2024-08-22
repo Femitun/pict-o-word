@@ -1,8 +1,11 @@
 import pygame
 import math
+import pygame.mixer
+
 
 class HomePage:
     def __init__(self, screen, background_image):
+        pygame.mixer.init()  # Initialize the mixer for audio
         self.screen = screen
         self.bg = background_image
         self.width, self.height = screen.get_size()
@@ -25,6 +28,25 @@ class HomePage:
         self.logo_shadow_rect.x = self.logo_rect.x + 9
         self.logo_shadow_rect.y = self.logo_rect.y + 9
 
+        # Music and volume settings
+        pygame.mixer.music.load("pianomusic.mp3")  # Replace with your music file
+        self.music_on = False  # Music starts off
+        self.volume_level = 0.5  # Volume starts at 50%
+        pygame.mixer.music.set_volume(self.volume_level)
+
+        # Reminder settings
+        self.reminder_on = False
+        self.reminder_time = 30000  # Reminder every 30 seconds if enabled
+        self.last_reminder_time = pygame.time.get_ticks()
+
+        # Help text
+        self.help_text = None
+
+        # Click feedback
+        self.feedback_time = 200  # Feedback lasts for 200ms
+        self.last_click_time = 0
+        self.feedback_rect = None
+
     def setup_colors(self):
         self.WHITE = (255, 255, 255)
         self.BLACK = (0, 0, 0)
@@ -37,10 +59,10 @@ class HomePage:
         self.YELLOW1 = (255, 255, 0)
         self.PINK1 = (225 * 0.85, 105 * 0.85, 180 * 0.85)
 
-
     def setup_fonts(self):
         self.title_font = pygame.font.Font(None, 48)
         self.button_font = pygame.font.Font(None, 36)
+        self.help_font = pygame.font.Font(None, 28)
 
     def load_icons(self):
         self.icons = {
@@ -52,28 +74,28 @@ class HomePage:
 
     def create_music_icon(self):
         surface = pygame.Surface((30, 30), pygame.SRCALPHA)
-        pygame.draw.circle(surface, self.BLACK, (15, 15), 10, 2)
-        pygame.draw.line(surface, self.BLACK, (25, 15), (25, 5), 2)
+        pygame.draw.circle(surface, self.WHITE, (15, 15), 10, 2)
+        pygame.draw.line(surface, self.WHITE, (25, 15), (25, 5), 2)
         return surface
 
     def create_volume_icon(self):
         surface = pygame.Surface((30, 30), pygame.SRCALPHA)
-        pygame.draw.polygon(surface, self.BLACK, [(5, 15), (15, 5), (15, 25)])
-        pygame.draw.arc(surface, self.BLACK, (15, 5, 10, 20), -math.pi/3, math.pi/3, 2)
+        pygame.draw.polygon(surface, self.WHITE, [(5, 15), (15, 5), (15, 25)])
+        pygame.draw.arc(surface, self.WHITE, (15, 5, 10, 20), -math.pi / 3, math.pi / 3, 2)
         return surface
 
     def create_reminder_icon(self):
         surface = pygame.Surface((30, 30), pygame.SRCALPHA)
-        pygame.draw.circle(surface, self.BLACK, (15, 15), 12, 2)
-        pygame.draw.line(surface, self.BLACK, (15, 7), (15, 15), 2)
-        pygame.draw.line(surface, self.BLACK, (15, 15), (20, 20), 2)
+        pygame.draw.circle(surface, self.WHITE, (15, 15), 12, 2)
+        pygame.draw.line(surface, self.WHITE, (15, 7), (15, 15), 2)
+        pygame.draw.line(surface, self.WHITE, (15, 15), (20, 20), 2)
         return surface
 
     def create_help_icon(self):
         surface = pygame.Surface((30, 30), pygame.SRCALPHA)
-        pygame.draw.circle(surface, self.BLACK, (15, 15), 13, 2)
+        pygame.draw.circle(surface, self.WHITE, (15, 15), 13, 2)
         font = pygame.font.Font(None, 24)
-        text = font.render("?", True, self.BLACK)
+        text = font.render("?", True, self.WHITE)
         surface.blit(text, (11, 8))
         return surface
 
@@ -89,13 +111,23 @@ class HomePage:
         if self.settings_open:
             self.draw_settings()
 
+        # Draw reminder if active
+        self.draw_reminder()
+
+        # Draw help text if active
+        if self.help_text:
+            self.draw_help_text()
+
+        # Draw click feedback
+        if self.feedback_rect and pygame.time.get_ticks() - self.last_click_time < self.feedback_time:
+            pygame.draw.rect(self.screen, self.YELLOW1, self.feedback_rect, 3)
+
     def draw_logo(self):
-        logo_rect = self.logo.get_rect(center=(self.width // 2, 50))
-        self.screen.blit(self.logo, logo_rect)
+        self.screen.blit(self.logo_shadow, self.logo_shadow_rect)
+        self.screen.blit(self.logo, self.logo_rect)
 
     def draw_mode_button(self):
         colors = {"EASY": self.GREEN, "MEDIUM": self.YELLOW, "HARD": self.RED}
-        # Adjusted y-coordinate to move the button down
         y_pos = 330
         self.draw_circle_with_shadow(self.screen, colors[self.current_mode], (self.width // 2, y_pos), 50)
         mode_text = self.button_font.render(self.current_mode, True, self.WHITE)
@@ -104,24 +136,23 @@ class HomePage:
 
         if self.current_mode != "EASY":
             pygame.draw.polygon(self.screen, self.WHITE,
-                                [(self.width // 2 - 80, y_pos), (self.width // 2 - 60, y_pos - 10), (self.width // 2 - 60, y_pos + 10)])
+                                [(self.width // 2 - 80, y_pos), (self.width // 2 - 60, y_pos - 10),
+                                 (self.width // 2 - 60, y_pos + 10)])
         if self.current_mode != "HARD":
             pygame.draw.polygon(self.screen, self.WHITE,
-                                [(self.width // 2 + 80, y_pos), (self.width // 2 + 60, y_pos - 10), (self.width // 2 + 60, y_pos + 10)])
+                                [(self.width // 2 + 80, y_pos), (self.width // 2 + 60, y_pos - 10),
+                                 (self.width // 2 + 60, y_pos + 10)])
 
     def draw_play_button(self):
-        # Adjusted y-coordinate to move the button further down
         y_pos = 430
-        # Increase the size of the rectangle
-        self.draw_rect_with_shadow(self.screen, self.PALEYELLOW, (self.width // 2 - 90, y_pos, 180, 60), border_radius=15)
+        self.draw_rect_with_shadow(self.screen, self.PALEYELLOW, (self.width // 2 - 90, y_pos, 180, 60),
+                                   border_radius=15)
         play_text = self.button_font.render("PLAY", True, self.WHITE)
         play_rect = play_text.get_rect(center=(self.width // 2, y_pos + 30))
         self.screen.blit(play_text, play_rect)
 
     def draw_exit_button(self):
-        # Adjusted y-coordinate to move the button further down
         y_pos = 530
-        # Increase the size of the rectangle
         self.draw_rect_with_shadow(self.screen, self.PINK1, (self.width // 2 - 90, y_pos, 180, 60), border_radius=15)
         exit_text = self.button_font.render("EXIT", True, self.WHITE)
         exit_rect = exit_text.get_rect(center=(self.width // 2, y_pos + 30))
@@ -149,45 +180,124 @@ class HomePage:
         settings_surface = pygame.Surface((300, 400), pygame.SRCALPHA)
         settings_surface.fill((173, 216, 230, 200))  # Light blue with some transparency
 
-        settings_title = self.title_font.render("SETTINGS", True, self.BLACK)
+        settings_title = self.title_font.render("SETTINGS", True, self.WHITE)
         settings_surface.blit(settings_title, (75, 20))
 
         options = ["Music", "Volume", "Reminder", "Need Help?"]
         for i, option in enumerate(options):
-            text = self.button_font.render(option, True, self.BLACK)
+            text = self.button_font.render(option, True, self.WHITE)
             settings_surface.blit(text, (70, 100 + i * 60))
             settings_surface.blit(self.icons[option], (30, 95 + i * 60))
 
+            # Draw slider for volume control
+            if option == "Volume":
+                pygame.draw.rect(settings_surface, self.WHITE, (70, 160 + i * 60, 160, 4))
+                slider_pos = 70 + int(160 * self.volume_level)
+                pygame.draw.circle(settings_surface, self.WHITE, (slider_pos, 162 + i * 60), 8)
+
         self.screen.blit(settings_surface, (self.width // 2 - 150, self.height // 2 - 200))
 
+    def draw_reminder(self):
+        if self.reminder_on and (pygame.time.get_ticks() - self.last_reminder_time > self.reminder_time):
+            reminder_text = self.button_font.render("Don't forget to take a break!", True, self.WHITE)
+            reminder_rect = reminder_text.get_rect(center=(self.width // 2, self.height - 50))
+            self.screen.blit(reminder_text, reminder_rect)
+            self.last_reminder_time = pygame.time.get_ticks()
+
+    def draw_help_text(self):
+        help_surface = pygame.Surface((self.width, 150), pygame.SRCALPHA)
+        help_surface.fill((0, 0, 0, 200))  # Increase transparency for better readability
+        help_text_lines = [
+            "This is a 4 Pics 1 Word game.",
+            "Tap the volume slider to adjust the volume.",
+            "The game consists of a series of puzzles.",
+            "Each puzzle shows four pictures that have one word in common.",
+            "Use the letters provided to guess the word."
+        ]
+        for i, line in enumerate(help_text_lines):
+            help_text = self.help_font.render(line, True, self.WHITE)
+            help_rect = help_text.get_rect(center=(self.width // 2, self.height // 2 - 50 + i * 30))
+            help_surface.blit(help_text, help_rect)
+        self.screen.blit(help_surface, (0, self.height - 250))
+
     def handle_event(self, event):
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                mouse_pos = pygame.mouse.get_pos()
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            mouse_pos = pygame.mouse.get_pos()
 
-                if self.settings_open:
-                    if not self.is_point_inside(mouse_pos, (self.width // 2 - 150, self.height // 2 - 200, 300, 400)):
-                        self.settings_open = False
+            if self.settings_open:
+                if not self.is_point_inside(mouse_pos, (self.width // 2 - 150, self.height // 2 - 200, 300, 400)):
+                    self.settings_open = False
                 else:
-                    y_pos = 330  # Adjust to match the new y-position for the mode button
+                    self.handle_settings_click(mouse_pos)
+            else:
+                y_pos = 330  # Match the y-position for the mode button
 
-                    # Check for right arrow (next mode)
-                    if self.is_point_inside(mouse_pos, (self.width // 2 + 60, y_pos - 10, 20, 20)):
-                        self.cycle_mode(1)
-                    # Check for left arrow (previous mode)
-                    elif self.is_point_inside(mouse_pos, (self.width // 2 - 80, y_pos - 10, 20, 20)):
-                        self.cycle_mode(-1)
-                    # Check for settings icon
-                    elif self.is_point_inside(mouse_pos, (20, 20, 40, 40)):
-                        self.settings_open = True
-                    # Check for play button
-                    elif self.is_point_inside(mouse_pos, (self.width // 2 - 90, 450, 180, 60)):
-                        print("Play button clicked")  # Replace with actual play logic
-                    # Check for exit button
-                    elif self.is_point_inside(mouse_pos, (self.width // 2 - 90, 530, 180, 60)):
-                        pygame.quit()
-                        quit()
+                # Check for right arrow (next mode)
+                if self.is_point_inside(mouse_pos, (self.width // 2 + 60, y_pos - 10, 20, 20)):
+                    self.cycle_mode(1)
+                # Check for left arrow (previous mode)
+                elif self.is_point_inside(mouse_pos, (self.width // 2 - 80, y_pos - 10, 20, 20)):
+                    self.cycle_mode(-1)
+                # Check for settings icon
+                elif self.is_point_inside(mouse_pos, (20, 20, 40, 40)):
+                    self.settings_open = True
+                # Check for play button
+                elif self.is_point_inside(mouse_pos, (self.width // 2 - 90, 450, 180, 60)):
+                    print("Play button clicked")  # Replace with actual play logic
+                # Check for exit button
+                elif self.is_point_inside(mouse_pos, (self.width // 2 - 90, 530, 180, 60)):
+                    pygame.quit()
+                    quit()
 
+    def handle_settings_click(self, mouse_pos):
+        x, y = mouse_pos
+        setting_rect_x = self.width // 2 - 150
+        setting_rect_y = self.height // 2 - 200
 
+        # Check each setting option
+        if self.is_point_inside(mouse_pos, (setting_rect_x + 30, setting_rect_y + 95, 240, 60)):
+            # Toggle Music
+            self.music_on = not self.music_on
+            if self.music_on:
+                pygame.mixer.music.play(-1)  # Loop forever
+            else:
+                pygame.mixer.music.stop()
+            print(f"Music toggled to {'on' if self.music_on else 'off'}")
+
+            # Add feedback
+            self.feedback_rect = (setting_rect_x + 30, setting_rect_y + 95, 240, 60)
+            self.last_click_time = pygame.time.get_ticks()
+
+        elif self.is_point_inside(mouse_pos, (setting_rect_x + 30, setting_rect_y + 155, 240, 60)):
+            # Adjust Volume using slider
+            slider_x = setting_rect_x + 70
+            slider_width = 160
+            if slider_x <= x <= slider_x + slider_width:
+                self.volume_level = (x - slider_x) / slider_width
+                pygame.mixer.music.set_volume(self.volume_level)
+            print(f"Volume level set to {int(self.volume_level * 100)}%")
+
+            # Add feedback
+            self.feedback_rect = (setting_rect_x + 30, setting_rect_y + 155, 240, 60)
+            self.last_click_time = pygame.time.get_ticks()
+
+        elif self.is_point_inside(mouse_pos, (setting_rect_x + 30, setting_rect_y + 215, 240, 60)):
+            # Toggle Reminder
+            self.reminder_on = not self.reminder_on
+            print(f"Reminder toggled to {'on' if self.reminder_on else 'off'}")
+
+            # Add feedback
+            self.feedback_rect = (setting_rect_x + 30, setting_rect_y + 215, 240, 60)
+            self.last_click_time = pygame.time.get_ticks()
+
+        elif self.is_point_inside(mouse_pos, (setting_rect_x + 30, setting_rect_y + 275, 240, 60)):
+            # Show Help
+            self.help_text = "Tap the volume slider to adjust volume."
+            print("Help shown")
+
+            # Add feedback
+            self.feedback_rect = (setting_rect_x + 30, setting_rect_y + 275, 240, 60)
+            self.last_click_time = pygame.time.get_ticks()
 
     def is_point_inside(self, point, rect):
         x, y = point
@@ -202,21 +312,17 @@ class HomePage:
 
     def draw_circle_with_shadow(self, surface, color, center, radius):
         shadow = pygame.Surface((radius * 2 + 4, radius * 2 + 4), pygame.SRCALPHA)
-        pygame.draw.circle(shadow, (0, 0, 0, 64), (radius + 2, radius + 2), radius)
+        pygame.draw.circle(shadow, (0, 0, 0, 128), (radius + 2, radius + 2), radius + 2,
+                           5)  # Increased shadow size and blur
         surface.blit(shadow, (center[0] - radius - 2, center[1] - radius - 2))
         pygame.draw.circle(surface, color, center, radius)
 
     def draw_rect_with_shadow(self, surface, color, rect, border_radius=0):
         shadow = pygame.Surface((rect[2] + 4, rect[3] + 4), pygame.SRCALPHA)
-        pygame.draw.rect(shadow, (0, 0, 0, 64), (2, 2, rect[2], rect[3]), border_radius=border_radius)
+        pygame.draw.rect(shadow, (0, 0, 0, 128), (2, 2, rect[2], rect[3]), border_radius=border_radius,
+                         width=5)  # Increased shadow size and blur
         surface.blit(shadow, (rect[0] - 2, rect[1] - 2))
         pygame.draw.rect(surface, color, rect, border_radius=border_radius)
-
-    def draw_logo(self):
-        # Draw the logo shadow
-        self.screen.blit(self.logo_shadow, self.logo_shadow_rect)
-        # Draw the logo
-        self.screen.blit(self.logo, self.logo_rect)
 
     def update(self):
         pass  # Add any update logic here if needed
