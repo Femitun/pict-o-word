@@ -13,16 +13,6 @@ running = True
 # background
 background = pygame.image.load('edc.jpg')
 
-#Adventure space Template
-A1 = (442, 430)
-A2 = (486+6, 430+4)
-A3 =  (530+6, 430+4)
-A4 =  (574+6, 430+4)
-A5 =  (618+6, 430+4)
-A6=  (662+6, 430+4)
-A7 =  (706+6, 430+4)
-A8 =  (750+6, 430+4)
-A9 =  (794+6, 430+4)
 
 #Pictures
 picture_one = pygame.image.load("Hard mode/Adventure/a.jpg")
@@ -31,9 +21,40 @@ picture_three = pygame.image.load("Hard mode/Adventure/c.jpg")
 picture_four = pygame.image.load("Hard mode/Adventure/d.jpg")
 logo = pygame.image.load("logs-removebg-preview.png")
 emp = pygame.image.load("sav.jpg")
+class Reset:
+    def rest(self):
+        # Top 8 40px
+        Boxes.T1 = (466 + 6, 520 + 4)
+        Boxes.T2 = (510 + 6, 520 + 4)
+        Boxes.T3 = (554 + 6, 520 + 4)
+        Boxes.T4 = (598 + 6, 520 + 4)
+        Boxes.T5 = (642 + 6, 520 + 4)
+        Boxes.T6 = (686 + 6, 520 + 4)
+        Boxes.T7 = (730 + 6, 520 + 4)
+        Boxes.T8 = (774 + 6, 520 + 4)
+
+        # Bottom 8 40px
+        Boxes.B1 = (466 + 6, 564 + 4)
+        Boxes.B2 = (510 + 6, 564 + 4)
+        Boxes.B3 = (554 + 6, 564 + 4)
+        Boxes.B4 = (598 + 6, 564 + 4)
+        Boxes.B5 = (642 + 6, 564 + 4)
+        Boxes.B6 = (686 + 6, 564 + 4)
+        Boxes.B7 = (730 + 6, 564 + 4)
+        Boxes.B8 = (774 + 6, 564 + 4)
 
 class Boxes:
     # Template
+    # Adventure space Template
+    A1 = (442+6, 430+6)
+    A2 = (486 + 6, 430 + 4)
+    A3 = (530 + 6, 430 + 4)
+    A4 = (574 + 6, 430 + 4)
+    A5 = (618 + 6, 430 + 4)
+    A6 = (662 + 6, 430 + 4)
+    A7 = (706 + 6, 430 + 4)
+    A8 = (750 + 6, 430 + 4)
+    A9 = (794 + 6, 430 + 4)
 
     # Top 8 40px
     T1 = (466 + 6, 520 + 4)
@@ -119,51 +140,346 @@ class Boxes:
                 Boxes.box_rects[i] = pygame.Rect(*pos, 40, 40)
                 Boxes.count += 1
                 Boxes.back_value.append(i)
-                print(Boxes.count)
-                if i == 0:
-                    Boxes.T1 = (442+6, 430+4)
+                if Boxes.count == 1:
+                    if i == 0:
+                        Boxes.T1 = Boxes.A1
+                    if i == 1:
+                        Boxes.T2 = Boxes.A1
+                    if i == 2:
+                        Boxes.T3 = Boxes.A1
+                    if i == 3:
+                        Boxes.T4 = Boxes.A1
+                    if i == 4:
+                        Boxes.T5 = Boxes.A1
+                    if i == 5:
+                        Boxes.T6 = Boxes.A1
+                    if i == 6:
+                        Boxes.T7 = Boxes.A1
+                    if i == 7:
+                        Boxes.T8 = Boxes.A1
+                    if i == 8:
+                        Boxes.B1 = Boxes.A1
+                    if i == 9:
+                        Boxes.B2 = Boxes.A1
+                    if i == 10:
+                        Boxes.B3 = Boxes.A1
+                    if i == 11:
+                        Boxes.B4 = Boxes.A1
+                    if i == 12:
+                        Boxes.B5 = Boxes.A1
+                    if i == 13:
+                        Boxes.B6 = Boxes.A1
+                    if i == 14:
+                        Boxes.B7 = Boxes.A1
+                    if i == 15:
+                        Boxes.B8 = Boxes.A1
+                if Boxes.count == 2:
+                    if i == 0:
+                        Boxes.T1 = Boxes.A2
+                    if i == 1:
+                        Boxes.T2 = Boxes.A2
+                    if i == 2:
+                        Boxes.T3 = Boxes.A2
+                    if i == 3:
+                        Boxes.T4 = Boxes.A2
+                    if i == 4:
+                        Boxes.T5 = Boxes.A2
+                    if i == 5:
+                        Boxes.T6 = Boxes.A2
+                    if i == 6:
+                        Boxes.T7 = Boxes.A2
+                    if i == 7:
+                        Boxes.T8 = Boxes.A2
+                    if i == 8:
+                        Boxes.B1 = Boxes.A2
+                    if i == 9:
+                        Boxes.B2 = Boxes.A2
+                    if i == 10:
+                        Boxes.B3 = Boxes.A2
+                    if i == 11:
+                        Boxes.B4 = Boxes.A2
+                    if i == 12:
+                        Boxes.B5 = Boxes.A2
+                    if i == 13:
+                        Boxes.B6 = Boxes.A2
+                    if i == 14:
+                        Boxes.B7 = Boxes.A2
+                    if i == 15:
+                        Boxes.B8 = Boxes.A2
+                if Boxes.count == 3:
+                    if i == 0:
+                        Boxes.T1 = Boxes.A3
+                    if i == 1:
+                        Boxes.T2 = Boxes.A3
+                    if i == 2:
+                        Boxes.T3 = Boxes.A3
+                    if i == 3:
+                        Boxes.T4 = Boxes.A3
+                    if i == 4:
+                        Boxes.T5 = Boxes.A3
+                    if i == 5:
+                        Boxes.T6 = Boxes.A3
+                    if i == 6:
+                        Boxes.T7 = Boxes.A3
+                    if i == 7:
+                        Boxes.T8 = Boxes.A3
+                    if i == 8:
+                        Boxes.B1 = Boxes.A3
+                    if i == 9:
+                        Boxes.B2 = Boxes.A3
+                    if i == 10:
+                        Boxes.B3 = Boxes.A3
+                    if i == 11:
+                        Boxes.B4 = Boxes.A3
+                    if i == 12:
+                        Boxes.B5 = Boxes.A3
+                    if i == 13:
+                        Boxes.B6 = Boxes.A3
+                    if i == 14:
+                        Boxes.B7 = Boxes.A3
+                    if i == 15:
+                        Boxes.B8 = Boxes.A3
+                if Boxes.count == 4:
+                    if i == 0:
+                        Boxes.T1 = Boxes.A4
+                    if i == 1:
+                        Boxes.T2 = Boxes.A4
+                    if i == 2:
+                        Boxes.T3 = Boxes.A4
+                    if i == 3:
+                        Boxes.T4 = Boxes.A4
+                    if i == 4:
+                        Boxes.T5 = Boxes.A4
+                    if i == 5:
+                        Boxes.T6 = Boxes.A4
+                    if i == 6:
+                        Boxes.T7 = Boxes.A4
+                    if i == 7:
+                        Boxes.T8 = Boxes.A4
+                    if i == 8:
+                        Boxes.B1 = Boxes.A4
+                    if i == 9:
+                        Boxes.B2 = Boxes.A4
+                    if i == 10:
+                        Boxes.B3 = Boxes.A4
+                    if i == 11:
+                        Boxes.B4 = Boxes.A4
+                    if i == 12:
+                        Boxes.B5 = Boxes.A4
+                    if i == 13:
+                        Boxes.B6 = Boxes.A4
+                    if i == 14:
+                        Boxes.B7 = Boxes.A4
+                    if i == 15:
+                        Boxes.B8 = Boxes.A4
+                if Boxes.count == 5:
+                    if i == 0:
+                        Boxes.T1 = Boxes.A5
+                    if i == 1:
+                        Boxes.T2 = Boxes.A5
+                    if i == 2:
+                        Boxes.T3 = Boxes.A5
+                    if i == 3:
+                        Boxes.T4 = Boxes.A5
+                    if i == 4:
+                        Boxes.T5 = Boxes.A5
+                    if i == 5:
+                        Boxes.T6 = Boxes.A5
+                    if i == 6:
+                        Boxes.T7 = Boxes.A5
+                    if i == 7:
+                        Boxes.T8 = Boxes.A5
+                    if i == 8:
+                        Boxes.B1 = Boxes.A5
+                    if i == 9:
+                        Boxes.B2 = Boxes.A5
+                    if i == 10:
+                        Boxes.B3 = Boxes.A5
+                    if i == 11:
+                        Boxes.B4 = Boxes.A5
+                    if i == 12:
+                        Boxes.B5 = Boxes.A5
+                    if i == 13:
+                        Boxes.B6 = Boxes.A5
+                    if i == 14:
+                        Boxes.B7 = Boxes.A5
+                    if i == 15:
+                        Boxes.B8 = Boxes.A5
+                if Boxes.count == 6:
+                    if i == 0:
+                        Boxes.T1 = Boxes.A6
+                    if i == 1:
+                        Boxes.T2 = Boxes.A6
+                    if i == 2:
+                        Boxes.T3 = Boxes.A6
+                    if i == 3:
+                        Boxes.T4 = Boxes.A6
+                    if i == 4:
+                        Boxes.T5 = Boxes.A6
+                    if i == 5:
+                        Boxes.T6 = Boxes.A6
+                    if i == 6:
+                        Boxes.T7 = Boxes.A6
+                    if i == 7:
+                        Boxes.T8 = Boxes.A6
+                    if i == 8:
+                        Boxes.B1 = Boxes.A6
+                    if i == 9:
+                        Boxes.B2 = Boxes.A6
+                    if i == 10:
+                        Boxes.B3 = Boxes.A6
+                    if i == 11:
+                        Boxes.B4 = Boxes.A6
+                    if i == 12:
+                        Boxes.B5 = Boxes.A6
+                    if i == 13:
+                        Boxes.B6 = Boxes.A6
+                    if i == 14:
+                        Boxes.B7 = Boxes.A6
+                    if i == 15:
+                        Boxes.B8 = Boxes.A6
+                if Boxes.count == 7:
+                    if i == 0:
+                        Boxes.T1 = Boxes.A7
+                    if i == 1:
+                        Boxes.T2 = Boxes.A7
+                    if i == 2:
+                        Boxes.T3 = Boxes.A7
+                    if i == 3:
+                        Boxes.T4 = Boxes.A7
+                    if i == 4:
+                        Boxes.T5 = Boxes.A7
+                    if i == 5:
+                        Boxes.T6 = Boxes.A7
+                    if i == 6:
+                        Boxes.T7 = Boxes.A7
+                    if i == 7:
+                        Boxes.T8 = Boxes.A7
+                    if i == 8:
+                        Boxes.B1 = Boxes.A7
+                    if i == 9:
+                        Boxes.B2 = Boxes.A7
+                    if i == 10:
+                        Boxes.B3 = Boxes.A7
+                    if i == 11:
+                        Boxes.B4 = Boxes.A7
+                    if i == 12:
+                        Boxes.B5 = Boxes.A7
+                    if i == 13:
+                        Boxes.B6 = Boxes.A7
+                    if i == 14:
+                        Boxes.B7 = Boxes.A7
+                    if i == 15:
+                        Boxes.B8 = Boxes.A7
+                if Boxes.count == 8:
+                    if i == 0:
+                        Boxes.T1 = Boxes.A8
+                    if i == 1:
+                        Boxes.T2 = Boxes.A8
+                    if i == 2:
+                        Boxes.T3 = Boxes.A8
+                    if i == 3:
+                        Boxes.T4 = Boxes.A8
+                    if i == 4:
+                        Boxes.T5 = Boxes.A8
+                    if i == 5:
+                        Boxes.T6 = Boxes.A8
+                    if i == 6:
+                        Boxes.T7 = Boxes.A8
+                    if i == 7:
+                        Boxes.T8 = Boxes.A8
+                    if i == 8:
+                        Boxes.B1 = Boxes.A8
+                    if i == 9:
+                        Boxes.B2 = Boxes.A8
+                    if i == 10:
+                        Boxes.B3 = Boxes.A8
+                    if i == 11:
+                        Boxes.B4 = Boxes.A8
+                    if i == 12:
+                        Boxes.B5 = Boxes.A8
+                    if i == 13:
+                        Boxes.B6 = Boxes.A8
+                    if i == 14:
+                        Boxes.B7 = Boxes.A8
+                    if i == 15:
+                        Boxes.B8 = Boxes.A8
+                if Boxes.count == 9:
+                    if i == 0:
+                        Boxes.T1 = Boxes.A9
+                    if i == 1:
+                        Boxes.T2 = Boxes.A9
+                    if i == 2:
+                        Boxes.T3 = Boxes.A9
+                    if i == 3:
+                        Boxes.T4 = Boxes.A9
+                    if i == 4:
+                        Boxes.T5 = Boxes.A9
+                    if i == 5:
+                        Boxes.T6 = Boxes.A9
+                    if i == 6:
+                        Boxes.T7 = Boxes.A9
+                    if i == 7:
+                        Boxes.T8 = Boxes.A9
+                    if i == 8:
+                        Boxes.B1 = Boxes.A9
+                    if i == 9:
+                        Boxes.B2 = Boxes.A9
+                    if i == 10:
+                        Boxes.B3 = Boxes.A9
+                    if i == 11:
+                        Boxes.B4 = Boxes.A9
+                    if i == 12:
+                        Boxes.B5 = Boxes.A9
+                    if i == 13:
+                        Boxes.B6 = Boxes.A9
+                    if i == 14:
+                        Boxes.B7 = Boxes.A9
+                    if i == 15:
+                        Boxes.B8 = Boxes.A9
+                    if (Boxes.T1 == Boxes.A1 and Boxes.B6 == Boxes.A2 and Boxes.T4 == Boxes.A3 and
+                            (Boxes.T7 == Boxes.A4 or Boxes.T8 == Boxes.A4 or Boxes.B1 == Boxes.A4) and
+                                Boxes.T5 == Boxes.A5 and Boxes.B8 == Boxes.A6 and Boxes.B2 == Boxes.A7 and
+                                    Boxes.T3 == Boxes.A8 and (Boxes.T7 == Boxes.A9 or Boxes.T8 == Boxes.A9 or
+                                                            Boxes.B1 == Boxes.A9)):
+                        print("Winner")
+                    else:
+                        print("Loser")
+                        Reset.rest()
                 return
 
-    def back(mouse_pos):
-        for i, rect in enumerate(Boxes.box_rects):
-            if rect.collidepoint(mouse_pos) and Boxes.count > len(Boxes.back_value) and mouse_pos[0] <490:
-                post = Boxes.back_value[Boxes.count]
-                Boxes.box_rects[i] = pygame.Rect(*post, 40, 40)
-                Boxes.count -= 1
-                print(Boxes.count)
-                return
-
-
-    #def clicks(a, b, x, y):
-    #    dis = math.sqrt((a - (x-40)) ** 2 + (b - (y-40)) ** 2)
-    #    return dis <= 40
+#    def back(mouse_pos):
+#        for i, rect in enumerate(Boxes.box_rects):
+#            if rect.collidepoint(mouse_pos) and Boxes.count == len(Boxes.back_value):
+#                post = Boxes.back_value[Boxes.count]
+#                Boxes.box_rects[i] = pygame.Rect(*post, 40, 40)
+#                Boxes.count -= 1
+#                print(Boxes.count)
+#                return
 
 #Texts
 font = pygame.font.Font('freesansbold.ttf',32)
-
-#textX = 466+6
-#textY = 520+4
 
 #random numbers
 random_x = random.randrange(466+6, 774+6, 44)
 random_y = random.randrange(520+4, 564+4, 44)
 
-ans_one = font.render("A", True, (255, 0, 0))
-ans_two = font.render("D", True, (255, 0, 0))
-ans_three = font.render("V", True, (255, 0, 0))
-ans_four = font.render("E", True, (255, 0, 0))
-ans_five = font.render("N", True, (0, 250, 0))
-ans_six = font.render("T", True, (0, 0, 250))
-ans_seven = font.render("U", True, (0, 0, 250))
-ans_eight = font.render("R", True, (0, 0, 25))
-ans_nine = font.render("E", True, (0, 0, 25))
-others_one = font.render("P", True, (0, 250, 0))
-others_two = font.render("E", True, (0, 250, 0))
-others_three = font.render("I", True, (250, 0, 0))
-others_four = font.render("O", True, (0, 250, 0))
-others_five = font.render("H", True, (0, 20, 0))
-others_six = font.render("R", True, (0, 250, 0))
-others_seven = font.render("S", True, (0, 220, 0))
+ans_one = font.render("A", True, (0, 0, 0))
+ans_two = font.render("D", True, (0, 0, 0))
+ans_three = font.render("V", True, (0, 0, 0))
+ans_four = font.render("E", True, (0, 0, 0))
+ans_five = font.render("N", True, (0, 0, 0))
+ans_six = font.render("T", True, (0, 0, 0))
+ans_seven = font.render("U", True, (0, 0, 0))
+ans_eight = font.render("R", True, (0, 0, 0))
+ans_nine = font.render("E", True, (0, 0, 0))
+others_one = font.render("P", True, (0, 0, 0))
+others_two = font.render("E", True, (0, 0, 0))
+others_three = font.render("I", True, (0, 0, 0))
+others_four = font.render("O", True, (0, 0, 0))
+others_five = font.render("H", True, (0, 0, 0))
+others_six = font.render("R", True, (0, 0, 0))
+others_seven = font.render("S", True, (0, 0, 0))
 
 
 while running:
@@ -203,9 +519,6 @@ while running:
     for i, rect in enumerate(zip(Boxes.box_rects)):
         screen.blit(Boxes.box[i], rect)
 
-    #Bottom 8 40px
-    # ...
-
     screen.blit(ans_one, Boxes.T1)
     screen.blit(ans_two, Boxes.B6)
     screen.blit(ans_three, Boxes.T4)
@@ -230,9 +543,3 @@ while running:
 
     if click:
         Boxes.clicks(mouse_pos)
-
-#    if click:
-#        for i, (x, y) in enumerate(zip(Boxes.boxX, Boxes.boxY)):
-#            if Boxes.clicks(x, y, *mouse_pos):
-#                print(f"Box {i+1} clicked!")
-                # handle the click event for this box
