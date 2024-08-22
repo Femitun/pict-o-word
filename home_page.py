@@ -267,13 +267,13 @@ class HomePage:
             self.last_click_time = pygame.time.get_ticks()
 
 
-        elif self.is_point_inside(mouse_pos, (setting_rect_x + 30, setting_rect_y + 275, 240, 60)):
+        elif self.is_point_inside(mouse_pos, (setting_rect_x + 30, setting_rect_y + 205, 240, 60)):
             # Show Help
             self.help_text = "Tap the volume slider to adjust volume."
             print("Help shown")
 
             # Add feedback
-            self.feedback_rect = (setting_rect_x + 30, setting_rect_y + 275, 240, 60)
+            self.feedback_rect = (setting_rect_x + 30, setting_rect_y + 205, 240, 60)
             self.last_click_time = pygame.time.get_ticks()
 
     def is_point_inside(self, point, rect):
