@@ -9,7 +9,7 @@ class GameUI:
 
         self.bg = pygame.image.load("t1.png")
         self.bg = pygame.transform.scale(self.bg, (self.width, self.height))
-
+        self.back_button_pressed = False
         self.back_arrow_rect = pygame.Rect(20, 20, 50, 50)
 
         # Colors
@@ -54,6 +54,7 @@ class GameUI:
 
             if self.back_arrow_rect.collidepoint(mouse_pos):
                 print("Back button clicked")
+                self.back_button_pressed = True  # Set the flag when the back button is pressed
                 return "BACK_TO_HOME"
 
             for i, button_rect in enumerate(self.buttons):
@@ -71,7 +72,12 @@ class GameUI:
 
     def go_back(self):
         print("Going back to the home page...")
-        # Here you would typically change the state or scene, e.g., self.manager.change_state("HOME")
+        # Here you would typically change the state or scene, e.g., self.manager.change_state
+        if self.back_button_pressed:
+            print("Going back to the home page...")
+            self.back_button_pressed = False  # Reset the flag
+            return True
+        return False
 
     def draw(self):
 

@@ -72,6 +72,9 @@ class Game:
             print("Updating game UI page...")  # Debugging output
             self.game_ui.update()
 
+            if self.game_ui.go_back():  # Assuming `go_back` in GameUI returns True if back is pressed
+                self.current_page = "home"
+
     def draw(self):
         # Clear the screen first
         self.screen.fill((0, 0, 0))  # Fill with black or any color to ensure the screen is cleared
