@@ -55,7 +55,7 @@ class GameUI:
             if self.back_arrow_rect.collidepoint(mouse_pos):
                 print("Back button clicked")
                 self.back_button_pressed = True  # Set the flag when the back button is pressed
-                return "BACK_TO_HOME"
+                return True
 
             for i, button_rect in enumerate(self.buttons):
                 if button_rect.collidepoint(mouse_pos):
@@ -71,8 +71,6 @@ class GameUI:
         pass
 
     def go_back(self):
-        print("Going back to the home page...")
-        # Here you would typically change the state or scene, e.g., self.manager.change_state
         if self.back_button_pressed:
             print("Going back to the home page...")
             self.back_button_pressed = False  # Reset the flag
