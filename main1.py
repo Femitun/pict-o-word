@@ -17,25 +17,29 @@ class Game:
 
         self.loading_page = LoadingPage(self.screen)
         self.home_page = HomePage(self.screen, self.bg)
-        self.game_ui = GameUI(self.screen, self.bg)
-        # Initialize GameUI but don't show it yet
         self.game_ui = None
         self.current_page = "loading"
 
     def run(self):
         running = True
         while running:
+            print(f"Current page in loop: {self.current_page}")  # Debugging output
+
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
-                self.handle_event(event)
+
+                action = self.handle_event(event)
+
+                if action == "BACK_TO_HOME":
+                    self.current_page = "home"
 
 
 
             self.update()
             self.draw()
-
-            pygame.display.flip()
+            pygame.display.update()  # Use update() instead of flip() to force redraw
             self.clock.tick(60)
 
         pygame.quit()
@@ -46,7 +50,12 @@ class Game:
         elif self.current_page == "home":
             self.home_page.handle_event(event)
         elif self.current_page == "game_ui":
-            self.game_ui.handle_event(event)
+            action = self.game_ui.handle_event(event)
+            if action == "BACK_TO_HOME":
+                print("Switching to home page")  # Debugging output
+                self.current_page = "home"
+                print(f"Current page is now: {self.current_page}")  # Confirm the page is set
+
 
     def update(self):
         if self.current_page == "loading":
@@ -54,19 +63,26 @@ class Game:
             if self.loading_page.loading_completed:
                 self.current_page = "home"
         elif self.current_page == "home":
+            print("Updating home page...")  # Debugging output
             self.home_page.update()
             if self.home_page.selection_made:
                 self.game_ui = GameUI(self.screen, self.home_page.selected_mode)  # Use the selected mode
                 self.current_page = "game_ui"
         elif self.current_page == "game_ui":
+            print("Updating game UI page...")  # Debugging output
             self.game_ui.update()
 
     def draw(self):
+        # Clear the screen first
+        self.screen.fill((0, 0, 0))  # Fill with black or any color to ensure the screen is cleared
         if self.current_page == "loading":
+            print("Drawing loading page...")  # Debugging output
             self.loading_page.draw()
         elif self.current_page == "home":
+            print("Drawing home page...")  # Debugging output
             self.home_page.draw()
         elif self.current_page == "game_ui":
+            print("Drawing game UI page...")  # Debugging output
             self.game_ui.draw()
 
 

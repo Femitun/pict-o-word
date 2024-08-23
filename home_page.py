@@ -91,6 +91,11 @@ class HomePage:
         return surface
 
     def draw(self):
+        print("Drawing home page...")  # Debug statement
+
+        # Fill screen with a color to verify it’s being drawn
+        self.screen.fill((50, 150, 200))  # Different color to ensure drawing
+
         self.screen.blit(self.bg, (0, 0))
         self.draw_logo()
         self.draw_mode_button()

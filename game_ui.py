@@ -53,14 +53,20 @@ class GameUI:
             mouse_pos = event.pos
 
             if self.back_arrow_rect.collidepoint(mouse_pos):
-                self.go_back()
+                print("Back button clicked")
+                return "BACK_TO_HOME"
 
             for i, button_rect in enumerate(self.buttons):
                 if button_rect.collidepoint(mouse_pos):
                     print(f"Game {i + 1} selected in {self.mode.capitalize()} mode.")
                     # Move to the selected game (this would typically involve changing states or scenes)
 
+        return None
+
     def update(self):
+        pass
+
+    def reset(self):
         pass
 
     def go_back(self):
