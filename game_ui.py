@@ -62,7 +62,7 @@ class GameUI:
                     print(f"Game {i + 1} selected in {self.mode.capitalize()} mode.")
                     # Move to the selected game (this would typically involve changing states or scenes)
 
-        return None
+        return False
 
     def update(self):
         pass

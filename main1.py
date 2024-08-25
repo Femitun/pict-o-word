@@ -55,6 +55,7 @@ class Game:
                 print("Switching to home page")  # Debugging output
                 self.current_page = "home"
                 print(f"Current page is now: {self.current_page}")  # Confirm the page is set
+                #Shouldn't there be something to make it stay in home page??? Cos after this it updates back to GameUI
 
 
     def update(self):
