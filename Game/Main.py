@@ -81,31 +81,15 @@ class Boxes:
         self.count = 0
         self.tries_left = 3
 
-    def clicks(self, mouse_pos):
-        for i, rect in enumerate(self.box_rects):
-            if rect.collidepoint(mouse_pos) and self.count < len(self.movement_positions) and mouse_pos[1] > 490:
-                pos = self.movement_positions[self.count]
-                self.box_rects[i] = pygame.Rect(*pos, 40, 40)
-                self.letter_positions[i] = pygame.Rect(*pos, 40, 40)  # Update letter position
-                self.count += 1
-                self.back_value.append(i)
-                if self.check_win():
-                    print("Winner")
-                    self.display_win_message()
-                    return
-                if self.count == len(self.movement_positions):
-                    self.tries_left -= 1
-                    if self.tries_left <= 0:
-                        print("You lose")
-                        self.display_lose_message()
-                        return
-
     def check_win(self):
-        return (self.T1 == self.A1 and self.B6 == self.A2 and self.T4 == self.A3 and
-                (self.T7 == self.A4 or self.T8 == self.A4 or self.B1 == self.A4) and
-                self.T5 == self.A5 and self.B8 == self.A6 and self.B2 == self.A7 and
-                self.T3 == self.A8 and (self.T7 == self.A9 or self.T8 == self.A9 or
-                self.B1 == self.A9))
+        print("Checking win")
+        correct_positions = [
+            (442, 430), (486, 430), (530, 430), (574, 430), (618, 430),
+            (662, 430), (706, 430), (750, 430), (794, 430)
+        ]
+
+        current_positions = [rect.topleft for rect in self.box_rects[:9]]
+        return current_positions == correct_positions
 
     def display_win_message(self):
         font = pygame.font.Font(None, 74)
@@ -122,6 +106,29 @@ class Boxes:
         pygame.display.flip()
         pygame.time.wait(2000)
         Reset.reset_game(game)
+
+    def clicks(self, mouse_pos):
+        for i, rect in enumerate(self.box_rects):
+            if rect.collidepoint(mouse_pos) and self.count < len(self.movement_positions) and mouse_pos[1] > 490:
+                pos = self.movement_positions[self.count]
+                self.box_rects[i] = pygame.Rect(*pos, 40, 40)
+                self.letter_positions[i] = pygame.Rect(*pos, 40, 40)  # Update letter position
+                self.count += 1
+                self.back_value.append(i)
+
+                # Check if all answer slots are filled
+                if self.count == len(self.movement_positions):
+                    if self.check_win():
+                        print("Winner")
+                        self.display_win_message()
+                    else:
+                        self.tries_left -= 1
+                        if self.tries_left <= 0:
+                            print("You lose")
+                            self.display_lose_message()
+                        else:
+                            print("Incorrect, please try again.")
+                return
 
     def back_click(self, mouse_pos):
         if self.count > 0:
