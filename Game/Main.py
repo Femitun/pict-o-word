@@ -165,7 +165,7 @@ class Game:
         self.ans_nine = self.font.render("E", True, (0, 0, 0))
 
         self.others_one = self.font.render("P", True, (0, 0, 0))
-        self.others_two = self.font.render("E", True, (0, 0, 0))
+        self.others_two = self.font.render("M", True, (0, 0, 0))
         self.others_three = self.font.render("I", True, (0, 0, 0))
         self.others_four = self.font.render("O", True, (0, 0, 0))
         self.others_five = self.font.render("H", True, (0, 0, 0))
