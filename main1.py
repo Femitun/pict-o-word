@@ -69,12 +69,14 @@ class Game:
             if self.home_page.selection_made:
                 self.game_ui = GameUI(self.screen, self.home_page.selected_mode)  # Use the selected mode
                 self.current_page = "game_ui"
+                self.home_page.selection_made = False  # Reset the selection
         elif self.current_page == "game_ui":
             print("Updating game UI page...")  # Debugging output
             self.game_ui.update()
 
             if self.game_ui.go_back():  # Assuming `go_back` in GameUI returns True if back is pressed
                 self.current_page = "home"
+                self.home_page.selection_made = False  # Reset the selection when returning to home
 
     def draw(self):
         # Clear the screen first
