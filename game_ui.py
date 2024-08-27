@@ -1,4 +1,5 @@
 import pygame
+from Ingame_ui import Boxes, Reset
 
 class GameUI:
     def __init__(self, screen, mode):
@@ -11,6 +12,8 @@ class GameUI:
         self.bg = pygame.transform.scale(self.bg, (self.width, self.height))
         self.back_button_pressed = False
         self.back_arrow_rect = pygame.Rect(20, 20, 50, 50)
+
+        self.boxes = Boxes()
 
         # Colors
         self.panel_color = (255, 235, 153)  # Light yellow
@@ -56,6 +59,10 @@ class GameUI:
                 print("Back button clicked")
                 self.back_button_pressed = True  # Set the flag when the back button is pressed
                 return True
+            else:
+                # Pass the mouse position to the Boxes class
+                self.boxes.clicks(mouse_pos)
+                self.boxes.back_click(mouse_pos)
 
             for i, button_rect in enumerate(self.buttons):
                 if button_rect.collidepoint(mouse_pos):
@@ -65,10 +72,14 @@ class GameUI:
         return False
 
     def update(self):
-        pass
+        # Add any update logic for the Boxes instance
+        if self.boxes.check_win():
+            self.boxes.display_win_message()
+        elif self.boxes.tries_left <= 0:
+            self.boxes.display_lose_message()
 
     def reset(self):
-        pass
+        Reset.reset_boxes(self.boxes)
 
     def go_back(self):
         if self.back_button_pressed:
@@ -89,7 +100,6 @@ class GameUI:
             (self.back_arrow_rect.right - self.back_arrow_rect.width // 3, self.back_arrow_rect.bottom)
         ]
         pygame.draw.polygon(self.screen, arrow_color, arrow_points)
-
 
         # Draw panel
         pygame.draw.rect(self.screen, self.panel_border_color, self.panel_rect, border_radius=20)
