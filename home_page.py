@@ -102,7 +102,7 @@ class HomePage:
         self.draw_play_button()
         self.draw_exit_button()
         self.draw_settings_icon()
-        self.draw_coin_counter()
+        #self.draw_coin_counter()
 
         if self.settings_open:
             self.draw_settings()
@@ -158,13 +158,13 @@ class HomePage:
             y = 33 + i * 7
             pygame.draw.line(self.screen, self.WHITE, (30, y), (50, y), 2)
 
-    def draw_coin_counter(self):
-        self.draw_rect_with_shadow(self.screen, self.PINK1, (self.width - 130, 20, 110, 40), border_radius=20)
-        pygame.draw.circle(self.screen, self.YELLOW1, (self.width - 110, 40), 15)
-        pygame.draw.circle(self.screen, self.BLACK, (self.width - 110, 40), 15, 2)
-        coin_text = self.button_font.render("50", True, self.WHITE)
-        coin_rect = coin_text.get_rect(center=(self.width - 60, 40))
-        self.screen.blit(coin_text, coin_rect)
+    #def draw_coin_counter(self):
+        #self.draw_rect_with_shadow(self.screen, self.PINK1, (self.width - 130, 20, 110, 40), border_radius=20)
+        #pygame.draw.circle(self.screen, self.YELLOW1, (self.width - 110, 40), 15)
+        #pygame.draw.circle(self.screen, self.BLACK, (self.width - 110, 40), 15, 2)
+        #coin_text = self.button_font.render("50", True, self.WHITE)
+        #coin_rect = coin_text.get_rect(center=(self.width - 60, 40))
+        #self.screen.blit(coin_text, coin_rect)
 
     def draw_settings(self):
         overlay = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
