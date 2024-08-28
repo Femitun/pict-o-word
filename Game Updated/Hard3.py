@@ -96,6 +96,27 @@ class Boxes:
         pygame.time.wait(2000)
         Reset.reset_game(game)
 
+    def display_lose_message(self):
+        font = pygame.font.Font(None, 74)
+        text = font.render('YOU LOSE!', True, (255, 0, 0))
+        game.screen.blit(text, (540, 360))
+        pygame.display.flip()
+        pygame.time.wait(2000)
+
+    def display_losebuttry_message1(self):
+        font = pygame.font.Font(None, 74)
+        text = font.render('2 more tries', True, (255,100,0))
+        game.screen.blit(text, (540, 360))
+        pygame.display.flip()
+        pygame.time.wait(2000)
+
+    def display_losebuttry_message2(self):
+        font = pygame.font.Font(None, 74)
+        text = font.render('1 more try', True, (255,20,0))
+        game.screen.blit(text, (540, 360))
+        pygame.display.flip()
+        pygame.time.wait(2000)
+
     def clicks(self, mouse_pos):
         for i, rect in enumerate(self.box_rects):
             if rect.collidepoint(mouse_pos) and self.count < len(self.movement_positions) and mouse_pos[1] > 490:
@@ -110,8 +131,24 @@ class Boxes:
                     if self.check_win():
                         print("Winner")
                         self.display_win_message()
+                        # pygame.quit() Don't know what to put here to make it go back to game UI yet!
+
                     else:
-                        print("Incorrect, please try again.")
+                        self.tries_left -= 1
+                        if self.tries_left <= 0:
+                            pygame.time.wait(200)
+                            print("You lose")
+                            self.display_lose_message()
+                            # pygame.quit() Don't know what to put here to make it go back to game UI yet!
+                        else:
+                            if self.tries_left == 1:
+                                pygame.time.wait(200)
+                                print("2 tries")
+                                self.display_losebuttry_message2()
+                            else:
+                                pygame.time.wait(200)
+                                print("1 try")
+                                self.display_losebuttry_message1()
                 return
 
     def back_click(self, mouse_pos):
