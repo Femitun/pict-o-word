@@ -218,6 +218,7 @@ class HomePage:
         if event.type == pygame.MOUSEBUTTONDOWN:
             mouse_pos = pygame.mouse.get_pos()
 
+
             if self.settings_open:
                 if not self.is_point_inside(mouse_pos, (self.width // 2 - 150, self.height // 2 - 200, 300, 300)):
                     self.settings_open = False
@@ -241,11 +242,12 @@ class HomePage:
                     print("Play button clicked")
                     self.selection_made = True  # Update selection_made when "Play" is clicked
                     self.selected_mode = self.current_mode  # Store the selected mode
+                    return "PLAY"
                 # Check for exit button
                 elif self.is_point_inside(mouse_pos, (self.width // 2 - 90, 530, 180, 60)):
                     pygame.quit()
                     quit()
-
+        return None
     def handle_settings_click(self, mouse_pos):
         x, y = mouse_pos
         setting_rect_x = self.width // 2 - 150

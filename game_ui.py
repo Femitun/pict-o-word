@@ -1,5 +1,24 @@
 import pygame
 
+from games.Easy1 import Game as Easy1
+from games.Easy2 import Game as Easy2
+from games.Easy3 import Game as Easy3
+from games.Easy4 import Game as Easy4
+from games.Easy5 import Game as Easy5
+from games.Medium1 import Game as Medium1
+from games.Medium2 import Game as Medium2
+from games.Medium3 import Game as Medium3
+from games.Medium4 import Game as Medium4
+from games.Medium5 import Game as Medium5
+from games.Hard1 import Game as Hard1
+from games.Hard2 import Game as Hard2
+from games.Hard3 import Game as Hard3
+from games.Hard4 import Game as Hard4
+from games.Hard5 import Game as Hard5
+
+
+
+
 class GameUI:
     def __init__(self, screen, mode):
         self.screen = screen
@@ -48,6 +67,13 @@ class GameUI:
             )
             self.buttons.append(button_rect)
 
+        self.games = {
+            "EASY": [Easy1, Easy2, Easy3, Easy4, Easy5],
+            "MEDIUM": [Medium1, Medium2, Medium3, Medium4, Medium5],
+            "HARD": [Hard1, Hard2, Hard3, Hard4, Hard5]
+
+        }
+
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
             mouse_pos = event.pos
@@ -60,6 +86,10 @@ class GameUI:
             for i, button_rect in enumerate(self.buttons):
                 if button_rect.collidepoint(mouse_pos):
                     print(f"Game {i + 1} selected in {self.mode.capitalize()} mode.")
+                    game_class = self.games[self.mode][i]  # Select the correct game class
+                    game_instance = game_class(self.screen)  # Initialize the game
+                    game_instance.run()  # Run the selected game
+
                     # Move to the selected game (this would typically involve changing states or scenes)
 
         return False

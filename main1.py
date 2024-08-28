@@ -6,17 +6,15 @@ from game_ui import GameUI  # Import the GameUI class
 class Game:
     def __init__(self):
         pygame.init()
-        screen_info = pygame.display.Info()
-        self.width, self.height = int(screen_info.current_w * 0.6), int(screen_info.current_h * 0.8)
-        self.screen = pygame.display.set_mode((self.width, self.height))
-        pygame.display.set_caption("Pict-o-word")
+        self.screen = pygame.display.set_mode((1280, 720))
 
         self.clock = pygame.time.Clock()
         self.bg = pygame.image.load("t1.png")
-        self.bg = pygame.transform.scale(self.bg, (self.width, self.height))
+        #self.bg = pygame.transform.scale(self.bg, (self.width, self.height))
 
         self.loading_page = LoadingPage(self.screen)
         self.home_page = HomePage(self.screen, self.bg)
+
         self.game_ui = None
         self.current_page = "loading"
 

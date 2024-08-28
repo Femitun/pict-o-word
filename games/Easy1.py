@@ -1,4 +1,5 @@
 import pygame
+import os
 
 class Reset:
     @staticmethod
@@ -13,12 +14,12 @@ class Reset:
 
     @staticmethod
     def reset_game(game):
-        game.boxes = Boxes()  # Reinitialize the boxes
+        game.boxes = Boxes(game)  # Reinitialize the boxes
         game.run()  # Restart the game loop
 
 
 class Boxes:
-    def __init__(self):
+    def __init__(self, game):
         self.A3 = (530 + 6, 430 + 4)
         self.A4 = (574 + 6, 430 + 4)
         self.A5 = (618 + 6, 430 + 4)
@@ -69,6 +70,8 @@ class Boxes:
             4: (706, 430),
         }
 
+        self.game = game
+
         self.back_value = []
         self.count = 0
         self.tries_left = 1
@@ -79,28 +82,28 @@ class Boxes:
 
 
         #desired_positions = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-        current_positions = ([rect.topleft for rect in self.box_rects[13:14]],
-                                  [rect.topleft for rect in self.box_rects[2:3]],
-                                  [rect.topleft for rect in self.box_rects[9:10]],
+        current_positions = ([rect.topleft for rect in self.box_rects[14:15]],
                                   [rect.topleft for rect in self.box_rects[12:13]],
+                                  [rect.topleft for rect in self.box_rects[3:4]],
+                                  [rect.topleft for rect in self.box_rects[6:7]],
                                   [rect.topleft for rect in self.box_rects[8:9]])
         return current_positions == correct_position1
 
     def display_win_message(self):
         font = pygame.font.Font(None, 74)
         text = font.render('You Win!', True, (0, 255, 0))
-        game.screen.blit(text, (540, 360))
+        self.game.screen.blit(text, (540, 360))
         pygame.display.flip()
         pygame.time.wait(2000)
-        Reset.reset_game(game)
+        self.game.running = False  # Stop the game loop
 
     def display_lose_message(self):
         font = pygame.font.Font(None, 74)
         text = font.render('WRONG!', True, (255, 0, 0))
-        game.screen.blit(text, (540, 360))
+        self.game.screen.blit(text, (540, 360))
         pygame.display.flip()
         pygame.time.wait(2000)
-        Reset.reset_game(game)
+        self.game.running = False  # Stop the game loop
 
     def clicks(self, mouse_pos):
         for i, rect in enumerate(self.box_rects):
@@ -135,22 +138,30 @@ class Boxes:
 
 
 class Game:
-    def __init__(self):
+    def __init__(self, screen):
         pygame.init()
         self.screen = pygame.display.set_mode((1280, 720))
         self.clock = pygame.time.Clock()
         self.running = True
+        self.boxes = Boxes(self)
+        base_path = os.path.dirname(__file__)
+        image_path1 = os.path.join(base_path, "easy", "Fruit", "a.jpg")
+        image_path2 = os.path.join(base_path, "easy", "Fruit", "b.jpg")
+        image_path3 = os.path.join(base_path, "easy", "Fruit", "c.jpg")
+        image_path4 = os.path.join(base_path, "easy", "Fruit", "d.jpg")
+
+
 
         self.background = pygame.image.load('edc.jpg')
         self.logo = pygame.image.load("logs-removebg-preview.png")
-        self.picture_one = pygame.image.load("Easy mode/Sports/a.jpg")
-        self.picture_two = pygame.image.load("Easy mode/Sports/b.jpg")
-        self.picture_three = pygame.image.load("Easy mode/Sports/c.jpg")
-        self.picture_four = pygame.image.load("Easy mode/Sports/d.jpg")
+        self.picture_one = pygame.image.load(image_path1)
+        self.picture_two = pygame.image.load(image_path2)
+        self.picture_three = pygame.image.load(image_path3)
+        self.picture_four = pygame.image.load(image_path4)
 
         self.font = pygame.font.Font('freesansbold.ttf', 32)
 
-        self.ans_one = self.font.render("L", True, (0, 0, 0))
+        self.ans_one = self.font.render("E", True, (0, 0, 0))
         self.ans_two = self.font.render("D", True, (0, 0, 0))
         self.ans_three = self.font.render("P", True, (0, 0, 0))
         self.ans_four = self.font.render("U", True, (0, 0, 0))
@@ -168,7 +179,7 @@ class Game:
         self.others_six = self.font.render("F", True, (0, 0, 0))
         self.others_seven = self.font.render("B", True, (0, 0, 0))
 
-        self.boxes = Boxes()
+        self.boxes = Boxes(self)
 
     def run(self):
         while self.running:

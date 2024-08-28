@@ -158,10 +158,10 @@ class Game:
 
         self.background = pygame.image.load('edc.jpg')
         self.logo = pygame.image.load("logs-removebg-preview.png")
-        self.picture_one = pygame.image.load("Medium mode/Concert/c.png")
-        self.picture_two = pygame.image.load("Medium mode/Concert/d.png")
-        self.picture_three = pygame.image.load("Medium mode/Concert/b.png")
-        self.picture_four = pygame.image.load("Medium mode/Concert/a.png")
+        self.picture_one = pygame.image.load("medium/Concert/c.png")
+        self.picture_two = pygame.image.load("medium/Concert/d.png")
+        self.picture_three = pygame.image.load("medium/Concert/b.png")
+        self.picture_four = pygame.image.load("medium/Concert/a.png")
 
         self.font = pygame.font.Font('freesansbold.ttf', 32)
 

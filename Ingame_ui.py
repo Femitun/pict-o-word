@@ -147,10 +147,10 @@ class Game:
 
         self.background = pygame.image.load('edc.jpg')
         self.logo = pygame.image.load("logs-removebg-preview.png")
-        self.picture_one = pygame.image.load("Hard mode/Adventure/a.jpg")
-        self.picture_two = pygame.image.load("Hard mode/Adventure/b.jpg")
-        self.picture_three = pygame.image.load("Hard mode/Adventure/c.jpg")
-        self.picture_four = pygame.image.load("Hard mode/Adventure/d.jpg")
+        self.picture_one = pygame.image.load("hard/Adventure/a.jpg")
+        self.picture_two = pygame.image.load("hard/Adventure/b.jpg")
+        self.picture_three = pygame.image.load("hard/Adventure/c.jpg")
+        self.picture_four = pygame.image.load("hard/Adventure/d.jpg")
 
         self.font = pygame.font.Font('freesansbold.ttf', 32)
 

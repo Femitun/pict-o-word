@@ -19,12 +19,15 @@ class Reset:
 
 class Boxes:
     def __init__(self):
+        self.A1 = (442 + 6, 430 + 4)
         self.A2 = (486 + 6, 430 + 4)
         self.A3 = (530 + 6, 430 + 4)
         self.A4 = (574 + 6, 430 + 4)
         self.A5 = (618 + 6, 430 + 4)
         self.A6 = (662 + 6, 430 + 4)
         self.A7 = (706 + 6, 430 + 4)
+        self.A8 = (750 + 6, 430 + 4)
+        self.A9 = (794 + 6, 430 + 4)
 
         self.T1 = (466 + 6, 520 + 4)
         self.T2 = (510 + 6, 520 + 4)
@@ -52,9 +55,9 @@ class Boxes:
         self.black_boxY = [520, 520, 520, 520, 520, 520, 520, 520, 564, 564, 564, 564, 564, 564, 564, 564]
         self.black_box = [pygame.image.load("sav.jpg") for _ in range(16)]
 
-        self.answer_boxX = [486+22, 530+22, 574+22, 618+22, 662+22, 706+22]
-        self.answer_boxY = [430, 430, 430, 430, 430, 430]
-        self.answer_box = [pygame.image.load("sav.jpg") for _ in range(6)]
+        self.answer_boxX = [442, 486, 530, 574, 618, 662, 706, 750, 794]
+        self.answer_boxY = [430, 430, 430, 430, 430, 430, 430, 430, 430]
+        self.answer_box = [pygame.image.load("sav.jpg") for _ in range(9)]
 
         self.box_rects = [pygame.Rect(x, y, 40, 40) for x, y in zip(self.boxX, self.boxY)]
         self.black_box_rects = [pygame.Rect(x, y, 40, 40) for x, y in zip(self.black_boxX, self.black_boxY)]
@@ -63,30 +66,37 @@ class Boxes:
         self.letter_positions = self.box_rects[:]
 
         self.movement_positions = {
-            0: (486+22, 430),
-            1: (530+22, 430),
-            2: (574+22, 430),
-            3: (618+22, 430),
-            4: (662+22, 430),
-            5: (706+22, 430),
+            0: (442, 430),
+            1: (486, 430),
+            2: (530, 430),
+            3: (574, 430),
+            4: (618, 430),
+            5: (662, 430),
+            6: (706, 430),
+            7: (750, 430),
+            8: (794, 430),
         }
 
         self.back_value = []
         self.count = 0
-        self.tries_left = 2
+        self.tries_left = 3
 
     def check_win(self):
         print("Checking win")
-        correct_position1 = [(486+22, 430)], [(530+22, 430)], [(574+22, 430)], [(618+22, 430)], [(662+22, 430)], [(706+22, 430)]
-        correct_position2 = [(486 + 22, 430)], [(530 + 22, 430)], [(706 + 22, 430)], [(618 + 22, 430)], [(662 + 22, 430)], [(574 + 22, 430)]
+        correct_position1 = [(442, 430)], [(486, 430)], [(530, 430)], [(574, 430)], [(618, 430)], [(662, 430)], [(706, 430)], [(750, 430)], [(794, 430)]
+        correct_position2 = [(442, 430)], [(486, 430)], [(530, 430)], [(794, 430)], [(618, 430)], [(662, 430)], [(706, 430)], [(750, 430)], [(574, 430)]
+
 
         #desired_positions = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-        current_positions = ([rect.topleft for rect in self.box_rects[9:10]],
-                                  [rect.topleft for rect in self.box_rects[12:13]],
+        current_positions = ([rect.topleft for rect in self.box_rects[14:15]],
+                                  [rect.topleft for rect in self.box_rects[1:2]],
+                                  [rect.topleft for rect in self.box_rects[11:12]],
+                                  [rect.topleft for rect in self.box_rects[4:5]],
+                                  [rect.topleft for rect in self.box_rects[7:8]],
+                                  [rect.topleft for rect in self.box_rects[8:9]],
                                   [rect.topleft for rect in self.box_rects[3:4]],
-                                  [rect.topleft for rect in self.box_rects[6:7]],
-                                  [rect.topleft for rect in self.box_rects[13:14]],
-                                  [rect.topleft for rect in self.box_rects[8:9]])
+                                  [rect.topleft for rect in self.box_rects[12:13]],
+                                  [rect.topleft for rect in self.box_rects[0:1]])
         return current_positions == correct_position1 or current_positions == correct_position2
 
     def display_win_message(self):
@@ -100,6 +110,14 @@ class Boxes:
     def display_lose_message(self):
         font = pygame.font.Font(None, 74)
         text = font.render('YOU LOSE!', True, (255, 0, 0))
+        game.screen.blit(text, (540, 360))
+        pygame.display.flip()
+        pygame.time.wait(2000)
+
+
+    def display_losebuttry_message1(self):
+        font = pygame.font.Font(None, 74)
+        text = font.render('2 more tries', True, (255,100,0))
         game.screen.blit(text, (540, 360))
         pygame.display.flip()
         pygame.time.wait(2000)
@@ -131,11 +149,18 @@ class Boxes:
                             pygame.time.wait(200)
                             print("You lose")
                             self.display_lose_message()
-                            # pygame.quit() Don't know what to put here to make it go back to game UI yet!
+                            #pygame.quit() Don't know what to put here to make it go back to game UI yet!
                         else:
-                            pygame.time.wait(200)
-                            print("1 try")
-                            self.display_losebuttry_message2()
+                            if self.tries_left == 1:
+                                pygame.time.wait(200)
+                                print("2 tries")
+                                self.display_losebuttry_message2()
+                            else:
+                                pygame.time.wait(200)
+                                print("1 try")
+                                self.display_losebuttry_message1()
+
+
                 return
 
     def back_click(self, mouse_pos):
@@ -155,29 +180,29 @@ class Game:
 
         self.background = pygame.image.load('edc.jpg')
         self.logo = pygame.image.load("logs-removebg-preview.png")
-        self.picture_one = pygame.image.load("Medium mode/Artist/a.jpg")
-        self.picture_two = pygame.image.load("Medium mode/Artist/d.jpg")
-        self.picture_three = pygame.image.load("Medium mode/Artist/b.jpg")
-        self.picture_four = pygame.image.load("Medium mode/Artist/c.jpg")
+        self.picture_one = pygame.image.load("hard/Adventure/a.jpg")
+        self.picture_two = pygame.image.load("hard/Adventure/b.jpg")
+        self.picture_three = pygame.image.load("hard/Adventure/c.jpg")
+        self.picture_four = pygame.image.load("hard/Adventure/d.jpg")
 
         self.font = pygame.font.Font('freesansbold.ttf', 32)
 
         self.ans_one = self.font.render("E", True, (0, 0, 0))
-        self.ans_two = self.font.render("L", True, (0, 0, 0))
+        self.ans_two = self.font.render("D", True, (0, 0, 0))
         self.ans_three = self.font.render("P", True, (0, 0, 0))
-        self.ans_four = self.font.render("T", True, (0, 0, 0))
-        self.ans_five = self.font.render("H", True, (0, 0, 0))
+        self.ans_four = self.font.render("U", True, (0, 0, 0))
+        self.ans_five = self.font.render("E", True, (0, 0, 0))
         self.ans_six = self.font.render("M", True, (0, 0, 0))
         self.ans_seven = self.font.render("I", True, (0, 0, 0))
         self.ans_eight = self.font.render("N", True, (0, 0, 0))
         self.ans_nine = self.font.render("T", True, (0, 0, 0))
 
-        self.others_one = self.font.render("A", True, (0, 0, 0))
+        self.others_one = self.font.render("O", True, (0, 0, 0))
         self.others_two = self.font.render("H", True, (0, 0, 0))
-        self.others_three = self.font.render("G", True, (0, 0, 0))
+        self.others_three = self.font.render("V", True, (0, 0, 0))
         self.others_four = self.font.render("R", True, (0, 0, 0))
         self.others_five = self.font.render("S", True, (0, 0, 0))
-        self.others_six = self.font.render("M", True, (0, 0, 0))
+        self.others_six = self.font.render("A", True, (0, 0, 0))
         self.others_seven = self.font.render("B", True, (0, 0, 0))
 
         self.boxes = Boxes()
