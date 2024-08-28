@@ -71,7 +71,7 @@ class Boxes:
 
         self.back_value = []
         self.count = 0
-        self.tries_left = 3
+        self.tries_left = 1
 
     def check_win(self):
         print("Checking win")
@@ -94,6 +94,14 @@ class Boxes:
         pygame.time.wait(2000)
         Reset.reset_game(game)
 
+    def display_lose_message(self):
+        font = pygame.font.Font(None, 74)
+        text = font.render('WRONG!', True, (255, 0, 0))
+        game.screen.blit(text, (540, 360))
+        pygame.display.flip()
+        pygame.time.wait(2000)
+        Reset.reset_game(game)
+
     def clicks(self, mouse_pos):
         for i, rect in enumerate(self.box_rects):
             if rect.collidepoint(mouse_pos) and self.count < len(self.movement_positions) and mouse_pos[1] > 490:
@@ -109,7 +117,13 @@ class Boxes:
                         print("Winner")
                         self.display_win_message()
                     else:
-                        print("Incorrect, please try again.")
+                        self.tries_left -= 1
+                        if self.tries_left <= 0:
+                            pygame.time.wait(200)
+                            print("You lose")
+                            self.display_lose_message()
+                        else:
+                            print("Incorrect, please try again.")
                 return
 
     def back_click(self, mouse_pos):
