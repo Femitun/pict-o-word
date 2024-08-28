@@ -56,10 +56,6 @@ class GameUI:
                 print("Back button clicked")
                 self.back_button_pressed = True  # Set the flag when the back button is pressed
                 return True
-            else:
-                # Pass the mouse position to the Boxes class
-                self.boxes.clicks(mouse_pos)
-                self.boxes.back_click(mouse_pos)
 
             for i, button_rect in enumerate(self.buttons):
                 if button_rect.collidepoint(mouse_pos):
