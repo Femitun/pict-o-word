@@ -47,8 +47,8 @@ class GameUI:
         self.back_arrow_rect = pygame.Rect(20, 20, 50, 50)  # Position and size for the back arrow
 
         # UI Elements
-        self.panel_rect = pygame.Rect(self.width // 6, self.height // 4, self.width * 2 // 3, self.height // 2)
-        self.title_rect = pygame.Rect(self.width // 3, self.height // 4 - 40, self.width // 3, 50)
+        self.panel_rect = pygame.Rect(self.width // 4, self.height // 3, self.width * 2 // 4, self.height // 3)
+        self.title_rect = pygame.Rect(self.width // 4, self.height // 4 + 10, self.width // 3, 50)
         self.buttons = []
 
         # Create buttons with adjusted spacing

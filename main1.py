@@ -14,6 +14,7 @@ class Game:
 
         self.loading_page = LoadingPage(self.screen)
         self.home_page = HomePage(self.screen, self.bg)
+        pygame.display.set_caption("Pict-o-word")
 
         self.game_ui = None
         self.current_page = "loading"

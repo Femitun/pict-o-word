@@ -1,4 +1,5 @@
 import pygame
+import os
 
 class Reset:
     @staticmethod
@@ -18,7 +19,7 @@ class Reset:
 
 
 class Boxes:
-    def __init__(self):
+    def __init__(self, game):
         self.A2 = (486 + 6, 430 + 4)
         self.A3 = (530 + 6, 430 + 4)
         self.A4 = (574 + 6, 430 + 4)
@@ -71,6 +72,8 @@ class Boxes:
             5: (706+22, 430),
         }
 
+        self.game = game
+
         self.back_value = []
         self.count = 0
         self.tries_left = 2
@@ -92,24 +95,28 @@ class Boxes:
     def display_win_message(self):
         font = pygame.font.Font(None, 74)
         text = font.render('You Win!', True, (0, 255, 0))
-        game.screen.blit(text, (540, 360))
+        self.game.screen.blit(text, (540, 360))
         pygame.display.flip()
         pygame.time.wait(2000)
-        Reset.reset_game(game)
+        self.game.running = False  # Stop the game loop
 
     def display_lose_message(self):
         font = pygame.font.Font(None, 74)
         text = font.render('YOU LOSE!', True, (255, 0, 0))
-        game.screen.blit(text, (540, 360))
+        self.game.screen.blit(text, (540, 360))
         pygame.display.flip()
         pygame.time.wait(2000)
+        self.game.running = False  # Stop the game loop
+
 
     def display_losebuttry_message2(self):
         font = pygame.font.Font(None, 74)
         text = font.render('1 more try', True, (255,20,0))
-        game.screen.blit(text, (540, 360))
+        self.game.screen.blit(text, (540, 360))
         pygame.display.flip()
         pygame.time.wait(2000)
+        #self.game.running = False  # Stop the game loop
+
 
     def clicks(self, mouse_pos):
         for i, rect in enumerate(self.box_rects):
@@ -147,18 +154,24 @@ class Boxes:
 
 
 class Game:
-    def __init__(self):
+    def __init__(self, screen):
         pygame.init()
         self.screen = pygame.display.set_mode((1280, 720))
         self.clock = pygame.time.Clock()
         self.running = True
+        self.boxes = Boxes(self)
+        base_path = os.path.dirname(__file__)
+        image_path1 = os.path.join(base_path, "medium", "Artist", "a.jpg")
+        image_path2 = os.path.join(base_path, "medium", "Artist", "b.jpg")
+        image_path3 = os.path.join(base_path, "medium", "Artist", "c.jpg")
+        image_path4 = os.path.join(base_path, "medium", "Artist", "d.jpg")
 
         self.background = pygame.image.load('edc.jpg')
         self.logo = pygame.image.load("logs-removebg-preview.png")
-        self.picture_one = pygame.image.load("medium/Artist/a.jpg")
-        self.picture_two = pygame.image.load("medium/Artist/d.jpg")
-        self.picture_three = pygame.image.load("medium/Artist/b.jpg")
-        self.picture_four = pygame.image.load("medium/Artist/c.jpg")
+        self.picture_one = pygame.image.load(image_path1)
+        self.picture_two = pygame.image.load(image_path2)
+        self.picture_three = pygame.image.load(image_path3)
+        self.picture_four = pygame.image.load(image_path4)
 
         self.font = pygame.font.Font('freesansbold.ttf', 32)
 
@@ -180,7 +193,7 @@ class Game:
         self.others_six = self.font.render("M", True, (0, 0, 0))
         self.others_seven = self.font.render("B", True, (0, 0, 0))
 
-        self.boxes = Boxes()
+        self.boxes = Boxes(self)
 
     def run(self):
         while self.running:
@@ -251,6 +264,7 @@ class Game:
         ]
         letter_rect = other_texts[index].get_rect(center=self.boxes.letter_positions[index + 9].center)
         return other_texts[index], letter_rect
+
 
 if __name__ == "__main__":
     game = Game()

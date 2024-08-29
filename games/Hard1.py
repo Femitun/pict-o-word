@@ -1,4 +1,5 @@
 import pygame
+import os
 
 class Reset:
     @staticmethod
@@ -18,7 +19,7 @@ class Reset:
 
 
 class Boxes:
-    def __init__(self):
+    def __init__(self, game):
         self.A1 = (442 + 6, 430 + 4)
         self.A2 = (486 + 6, 430 + 4)
         self.A3 = (530 + 6, 430 + 4)
@@ -77,6 +78,8 @@ class Boxes:
             8: (794, 430),
         }
 
+        self.game = game
+
         self.back_value = []
         self.count = 0
         self.tries_left = 3
@@ -102,30 +105,32 @@ class Boxes:
     def display_win_message(self):
         font = pygame.font.Font(None, 74)
         text = font.render('You Win!', True, (0, 255, 0))
-        game.screen.blit(text, (540, 360))
+        self.game.screen.blit(text, (540, 360))
         pygame.display.flip()
         pygame.time.wait(2000)
-        Reset.reset_game(game)
+        self.game.running = False  # Stop the game loop
 
     def display_lose_message(self):
         font = pygame.font.Font(None, 74)
         text = font.render('YOU LOSE!', True, (255, 0, 0))
-        game.screen.blit(text, (540, 360))
+        self.game.screen.blit(text, (540, 360))
         pygame.display.flip()
         pygame.time.wait(2000)
+        self.game.running = False  # Stop the game loop
+
 
 
     def display_losebuttry_message1(self):
         font = pygame.font.Font(None, 74)
         text = font.render('2 more tries', True, (255,100,0))
-        game.screen.blit(text, (540, 360))
+        self.game.screen.blit(text, (540, 360))
         pygame.display.flip()
         pygame.time.wait(2000)
 
     def display_losebuttry_message2(self):
         font = pygame.font.Font(None, 74)
         text = font.render('1 more try', True, (255,20,0))
-        game.screen.blit(text, (540, 360))
+        self.game.screen.blit(text, (540, 360))
         pygame.display.flip()
         pygame.time.wait(2000)
 
@@ -172,18 +177,24 @@ class Boxes:
 
 
 class Game:
-    def __init__(self):
+    def __init__(self, screen):
         pygame.init()
         self.screen = pygame.display.set_mode((1280, 720))
         self.clock = pygame.time.Clock()
         self.running = True
+        self.boxes = Boxes(self)
+        base_path = os.path.dirname(__file__)
+        image_path1 = os.path.join(base_path, "hard", "Adventure", "a.jpg")
+        image_path2 = os.path.join(base_path, "hard", "Adventure", "b.jpg")
+        image_path3 = os.path.join(base_path, "hard", "Adventure", "c.jpg")
+        image_path4 = os.path.join(base_path, "hard", "Adventure", "d.jpg")
 
         self.background = pygame.image.load('edc.jpg')
         self.logo = pygame.image.load("logs-removebg-preview.png")
-        self.picture_one = pygame.image.load("hard/Adventure/a.jpg")
-        self.picture_two = pygame.image.load("hard/Adventure/b.jpg")
-        self.picture_three = pygame.image.load("hard/Adventure/c.jpg")
-        self.picture_four = pygame.image.load("hard/Adventure/d.jpg")
+        self.picture_one = pygame.image.load(image_path1)
+        self.picture_two = pygame.image.load(image_path2)
+        self.picture_three = pygame.image.load(image_path3)
+        self.picture_four = pygame.image.load(image_path4)
 
         self.font = pygame.font.Font('freesansbold.ttf', 32)
 
@@ -205,7 +216,7 @@ class Game:
         self.others_six = self.font.render("A", True, (0, 0, 0))
         self.others_seven = self.font.render("B", True, (0, 0, 0))
 
-        self.boxes = Boxes()
+        self.boxes = Boxes(self)
 
     def run(self):
         while self.running:
@@ -276,6 +287,7 @@ class Game:
         ]
         letter_rect = other_texts[index].get_rect(center=self.boxes.letter_positions[index + 9].center)
         return other_texts[index], letter_rect
+
 
 if __name__ == "__main__":
     game = Game()
