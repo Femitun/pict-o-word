@@ -193,22 +193,23 @@ class HomePage:
         self.screen.blit(settings_surface, (self.width // 2 - 150, self.height // 2 - 200))
 
     def draw_help_text(self):
-        help_surface_height = 250
+        help_surface_height = 360
         help_surface = pygame.Surface((self.width, help_surface_height), pygame.SRCALPHA)
         help_surface.fill((0, 0, 0, 200))  # Semi-transparent black background
 
         help_text_lines = [
-            "This is adapted from the 4 Pics 1 Word game.",
             "Tap the volume slider to adjust the volume.",
             "Left-click to select and input a letter, Right-click to drop the letter.",
             "There are 3 different difficulties that a user can access, click arrows to navigate",
-            "For easy, you have only one guess",
-            "For medium, you have two guesses",
-            "For hard, you have three guesses",
+            "For easy, you have only 1 guess, for medium, 2 and 3 for hard",
+            "To exit a selected game,  close the window, "
+            "you'll be automatically taken to the game selection interface",
+            "Click the hint button to reveal a letter for 10 coins",
+            "You gain 20 coins with every win",
             "Good luck!"
         ]
         y_offset = 15  # Start drawing text from this y-coordinate within help_surface
-        line_spacing = 30  # Space between lines of text
+        line_spacing = 45  # Space between lines of text
 
         for i, line in enumerate(help_text_lines):
             help_text = self.help_font.render(line, True, self.WHITE)
