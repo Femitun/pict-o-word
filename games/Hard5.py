@@ -1,5 +1,6 @@
 import pygame
 import os
+from coin_manager import CoinManager
 
 class Reset:
     @staticmethod
@@ -74,26 +75,62 @@ class Boxes:
             6: (750, 430),
         }
 
+        self.correct_positions = {
+            0: 0,  # index of the first correct letter
+            1: 10,  # index of the second correct letter
+            2: 6,  # index of the third correct letter
+            3: 13,  # index of the fourth correct letter
+            4: 2,  # index of the fifth correct letter
+            5: 5,
+            6: 12,
+        }
+
         self.game = game
+        self.hint_button = pygame.Rect(100, 550, 250, 50)  # Example position and size
+        self.hint_button_color = (125, 50, 50)  # Example background color (DodgerBlue)
+        self.hint_text_color = (255, 255, 255)  # White text color
+        self.hint_font = pygame.font.Font(None, 36)
 
         self.back_value = []
         self.count = 0
         self.tries_left = 3
 
+    def use_hint(self):
+        if CoinManager.use_coins(10):  # Deduct 10 coins for a hint
+            self.reveal_letter()  # Reveal a letter
+            self.display_message("Hint used!", (50, 600), (0, 255, 0))  # Green text for success
+            return True
+        else:
+            self.display_message("Not enough coins!", (50, 600), (255, 0, 0))  # Red text for error
+            return False
+
+    def display_message(self, message, position, color):
+        font = pygame.font.Font(None, 36)
+        text = font.render(message, True, color)
+        self.game.screen.blit(text, position)
+        pygame.display.flip()
+        pygame.time.wait(500)  # Wait for a second to show the message
+
+    def reveal_letter(self):
+        for i in range(len(self.movement_positions)):
+            if i >= self.count:
+                correct_box_index = self.correct_positions[i]
+                pos = self.movement_positions[i]
+                self.box_rects[correct_box_index] = pygame.Rect(*pos, 40, 40)
+                self.letter_positions[correct_box_index] = pygame.Rect(*pos, 40, 40)
+                self.count += 1
+                self.back_value.append(correct_box_index)
+                break
+
     def check_win(self):
         print("Checking win")
-        correct_position1 = [(486, 430)], [(530, 430)], [(574, 430)], [(618, 430)], [(662, 430)], [(706, 430)], [(750, 430)]
-        correct_position2 = [(618, 430)], [(530, 430)], [(574, 430)], [(486, 430)], [(662, 430)], [(706, 430)], [(750, 430)]
+        correct_positions = [(486, 430), (530, 430), (574, 430), (618, 430), (662, 430), (706, 430), (750, 430)]
 
         #desired_positions = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-        current_positions = ([rect.topleft for rect in self.box_rects[0:1]],
-                                  [rect.topleft for rect in self.box_rects[10:11]],
-                                  [rect.topleft for rect in self.box_rects[6:7]],
-                                  [rect.topleft for rect in self.box_rects[13:14]],
-                                  [rect.topleft for rect in self.box_rects[2:3]],
-                                  [rect.topleft for rect in self.box_rects[5:6]],
-                                  [rect.topleft for rect in self.box_rects[12:13]])
-        return current_positions == correct_position1 or current_positions == correct_position2
+        current_positions = [self.box_rects[self.correct_positions[i]].topleft for i in range(len(correct_positions))]
+
+        # Return whether the current positions match the expected correct positions
+        return current_positions == correct_positions
 
     def display_win_message(self):
         font = pygame.font.Font(None, 74)
@@ -101,6 +138,7 @@ class Boxes:
         self.game.screen.blit(text, (540, 360))
         pygame.display.flip()
         pygame.time.wait(2000)
+        CoinManager.add_coins(20)  # Reward 20 coins after winning
         self.game.running = False  # Stop the game loop
 
     def display_lose_message(self):
@@ -125,6 +163,11 @@ class Boxes:
         self.game.screen.blit(text, (540, 360))
         pygame.display.flip()
         pygame.time.wait(2000)
+
+    def draw_hint_button(self, screen):
+        pygame.draw.rect(screen, self.hint_button_color, self.hint_button)
+        hint_text = self.hint_font.render("Use Hint (-10 Coins)", True, self.hint_text_color)
+        screen.blit(hint_text, (self.hint_button.x + 10, self.hint_button.y + 10))
 
     def clicks(self, mouse_pos):
         for i, rect in enumerate(self.box_rects):
@@ -180,6 +223,8 @@ class Game:
         image_path2 = os.path.join(base_path, "hard", "Whisper", "b.png")
         image_path3 = os.path.join(base_path, "hard", "Whisper", "c.png")
         image_path4 = os.path.join(base_path, "hard", "Whisper", "d.png")
+        self.hint_font = pygame.font.Font('freesansbold.ttf', 24)
+        self.coin_font = pygame.font.Font('freesansbold.ttf', 24)
 
         self.background = pygame.image.load('edc.jpg')
         self.logo = pygame.image.load("logs-removebg-preview.png")
@@ -222,10 +267,18 @@ class Game:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
+
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    if pygame.mouse.get_pressed()[0]:  # Left click
-                        click = True
-                    if pygame.mouse.get_pressed()[2]:  # Right click
+                    if event.button == 1:  # Left click
+                        if self.boxes.hint_button.collidepoint(mouse_pos):
+                            if self.boxes.use_hint():
+                                print("Hint used!")
+                            else:
+                                print("Not enough coins for hint!")
+                        else:
+                            click = True
+
+                    elif event.button == 3:  # Right click
                         back_click = True
 
             if click:
@@ -245,9 +298,16 @@ class Game:
         self.screen.blit(self.picture_two, (642, 98))
         self.screen.blit(self.picture_three, (488, 252))
         self.screen.blit(self.picture_four, (642, 252))
+        pygame.draw.rect(self.screen, (0, 255, 0), self.boxes.hint_button)
+        hint_text = self.hint_font.render("Hint (10)", True, (255, 255, 255))
+        hint_rect = hint_text.get_rect(center=self.boxes.hint_button.center)
+        self.screen.blit(hint_text, hint_rect)
 
         for k, rect in enumerate(self.boxes.answer_box_rects):
             self.screen.blit(self.boxes.answer_box[k], rect)
+
+        self.boxes.draw_hint_button(self.screen)
+
 
         for j, rect in enumerate(self.boxes.black_box_rects):
             self.screen.blit(self.boxes.black_box[j], rect)
@@ -279,7 +339,6 @@ class Game:
         ]
         letter_rect = other_texts[index].get_rect(center=self.boxes.letter_positions[index + 9].center)
         return other_texts[index], letter_rect
-
 
 if __name__ == "__main__":
     game = Game()

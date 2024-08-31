@@ -2,6 +2,7 @@ import pygame
 from loading_page import LoadingPage
 from home_page import HomePage
 from game_ui import GameUI  # Import the GameUI class
+from coin_manager import CoinManager
 
 class Game:
     def __init__(self):
@@ -72,7 +73,6 @@ class Game:
         elif self.current_page == "game_ui":
             print("Updating game UI page...")  # Debugging output
             self.game_ui.update()
-
             if self.game_ui.go_back():  # Assuming `go_back` in GameUI returns True if back is pressed
                 self.current_page = "home"
                 self.home_page.selection_made = False  # Reset the selection when returning to home

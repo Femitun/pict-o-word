@@ -1,5 +1,6 @@
 import pygame
 import os
+from coin_manager import CoinManager
 
 class Reset:
     @staticmethod
@@ -78,38 +79,87 @@ class Boxes:
             8: (794, 430),
         }
 
+        self.correct_positions = [
+            {0: 1, 1: 0, 2: 8, 3: 4, 4: 11, 5: 10, 6: 6, 7: 13, 8: 15},  # First correct configuration
+            {0: 1, 1: 0, 2: 8, 3: 15, 4: 11, 5: 10, 6: 6, 7: 13, 8: 4},  # Second correct configuration
+            {0: 1, 1: 4, 2: 8, 3: 0, 4: 11, 5: 10, 6: 6, 7: 13, 8: 15},
+            {0: 1, 1: 4, 2: 8, 3: 15, 4: 11, 5: 10, 6: 6, 7: 13, 8: 0},
+            {0: 1, 1: 15, 2: 8, 3: 4, 4: 11, 5: 10, 6: 6, 7: 13, 8: 0},
+            {0: 1, 1: 15, 2: 8, 3: 0, 4: 11, 5: 10, 6: 6, 7: 13, 8: 4},
+            {0: 1, 1: 0, 2: 10, 3: 4, 4: 11, 5: 8, 6: 6, 7: 13, 8: 15},
+            {0: 1, 1: 0, 2: 10, 3: 15, 4: 11, 5: 8, 6: 6, 7: 13, 8: 4},
+            {0: 1, 1: 4, 2: 10, 3: 0, 4: 11, 5: 8, 6: 6, 7: 13, 8: 15},
+            {0: 1, 1: 4, 2: 10, 3: 15, 4: 11, 5: 8, 6: 6, 7: 13, 8: 0},
+            {0: 1, 1: 15, 2: 10, 3: 4, 4: 11, 5: 8, 6: 6, 7: 13, 8: 0},
+            {0: 1, 1: 15, 2: 10, 3: 0, 4: 11, 5: 8, 6: 6, 7: 13, 8: 4}
+        ]
+
         self.game = game
+        self.coins = 0
+        self.hint_button = pygame.Rect(100, 550, 250, 50)  # Example position and size
+        self.hint_button_color = (125, 50, 50)  # Example background color (DodgerBlue)
+        self.hint_text_color = (255, 255, 255)  # White text color
+        self.hint_font = pygame.font.Font(None, 36)
 
         self.back_value = []
         self.count = 0
         self.tries_left = 2
 
+    def use_hint(self):
+        if CoinManager.use_coins(10):  # Deduct 10 coins for a hint
+            self.reveal_letter()  # Reveal a letter
+            self.display_message("Hint used!", (50, 600), (0, 255, 0))  # Green text for success
+            return True
+        else:
+            self.display_message("Not enough coins!", (50, 600), (255, 0, 0))  # Red text for error
+            return False
+
+    def display_message(self, message, position, color):
+        font = pygame.font.Font(None, 36)
+        text = font.render(message, True, color)
+        self.game.screen.blit(text, position)
+        pygame.display.flip()
+        pygame.time.wait(500)  # Wait for a second to show the message
+
+    def reveal_letter(self):
+        if self.count < len(self.movement_positions):
+            for config in self.correct_positions:
+                correct_box_index = config[self.count]
+                pos = self.movement_positions[self.count]
+                self.box_rects[correct_box_index] = pygame.Rect(*pos, 40, 40)
+                self.letter_positions[correct_box_index] = pygame.Rect(*pos, 40, 40)
+                self.count += 1
+                self.back_value.append(correct_box_index)
+                break
+
     def check_win(self):
         print("Checking win")
-        correct_position1 = [(442, 430)], [(486, 430)], [(530, 430)], [(574, 430)], [(618, 430)], [(662, 430)], [(706, 430)], [(750, 430)], [(794, 430)]
-        correct_position2 = [(442, 430)], [(486, 430)], [(530, 430)], [(794, 430)], [(618, 430)], [(662, 430)], [(706, 430)], [(750, 430)], [(574, 430)]
-        correct_position3 = [(442, 430)], [(574, 430)], [(530, 430)], [(486, 430)], [(618, 430)], [(662, 430)], [(706, 430)], [(750, 430)], [(794, 430)]
-        correct_position4 = [(442, 430)], [(574, 430)], [(530, 430)], [(794, 430)], [(618, 430)], [(662, 430)], [(706, 430)], [(750, 430)], [(486, 430)]
-        correct_position5 = [(442, 430)], [(794, 430)], [(530, 430)], [(486, 430)], [(618, 430)], [(662, 430)], [(706, 430)], [(750, 430)], [(574, 430)]
-        correct_position6 = [(442, 430)], [(794, 430)], [(530, 430)], [(574, 430)], [(618, 430)], [(662, 430)], [(706, 430)], [(750, 430)], [(486, 430)]
-        correct_position7 = [(442, 430)], [(486, 430)], [(662, 430)], [(574, 430)], [(618, 430)], [(530, 430)], [(706, 430)], [(750, 430)], [(794, 430)]
-        correct_position8 = [(442, 430)], [(486, 430)], [(662, 430)], [(794, 430)], [(618, 430)], [(530, 430)], [(706, 430)], [(750, 430)], [(574, 430)]
-        correct_position9 = [(442, 430)], [(574, 430)], [(662, 430)], [(486, 430)], [(618, 430)], [(530, 430)], [(706, 430)], [(750, 430)], [(794, 430)]
-        correct_position10 = [(442, 430)], [(574, 430)], [(662, 430)], [(794, 430)], [(618, 430)], [(530, 430)], [(706, 430)], [(750, 430)], [(486, 430)]
-        correct_position11 = [(442, 430)], [(794, 430)], [(662, 430)], [(486, 430)], [(618, 430)], [(530, 430)], [(706, 430)], [(750, 430)], [(574, 430)]
-        correct_position12 = [(442, 430)], [(794, 430)], [(662, 430)], [(574, 430)], [(618, 430)], [(530, 430)], [(706, 430)], [(750, 430)], [(486, 430)]
+        correct_position1 = [(442, 430), (486, 430), (530, 430), (574, 430), (618, 430), (662, 430), (706, 430), (750, 430), (794, 430)]
+        correct_position2 = [(442, 430), (486, 430), (530, 430), (794, 430), (618, 430), (662, 430), (706, 430), (750, 430), (574, 430)]
+        correct_position3 = [(442, 430), (574, 430), (530, 430), (486, 430), (618, 430), (662, 430), (706, 430), (750, 430), (794, 430)]
+        correct_position4 = [(442, 430), (574, 430), (530, 430), (794, 430), (618, 430), (662, 430), (706, 430), (750, 430), (486, 430)]
+        correct_position5 = [(442, 430), (794, 430), (530, 430), (486, 430), (618, 430), (662, 430), (706, 430), (750, 430), (574, 430)]
+        correct_position6 = [(442, 430), (794, 430), (530, 430), (574, 430), (618, 430), (662, 430), (706, 430), (750, 430), (486, 430)]
+        correct_position7 = [(442, 430), (486, 430), (662, 430), (574, 430), (618, 430), (530, 430), (706, 430), (750, 430), (794, 430)]
+        correct_position8 = [(442, 430), (486, 430), (662, 430), (794, 430), (618, 430), (530, 430), (706, 430), (750, 430), (574, 430)]
+        correct_position9 = [(442, 430), (574, 430), (662, 430), (486, 430), (618, 430), (530, 430), (706, 430), (750, 430), (794, 430)]
+        correct_position10 = [(442, 430), (574, 430), (662, 430), (794, 430), (618, 430), (530, 430), (706, 430), (750, 430), (486, 430)]
+        correct_position11 = [(442, 430), (794, 430), (662, 430), (486, 430), (618, 430), (530, 430), (706, 430), (750, 430), (574, 430)]
+        correct_position12 = [(442, 430), (794, 430), (662, 430), (574, 430), (618, 430), (530, 430), (706, 430), (750, 430), (486, 430)]
 
 
         #desired_positions = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-        current_positions = ([rect.topleft for rect in self.box_rects[1:2]],
-                                  [rect.topleft for rect in self.box_rects[0:1]],
-                                  [rect.topleft for rect in self.box_rects[8:9]],
-                                  [rect.topleft for rect in self.box_rects[4:5]],
-                                  [rect.topleft for rect in self.box_rects[11:12]],
-                                  [rect.topleft for rect in self.box_rects[10:11]],
-                                  [rect.topleft for rect in self.box_rects[6:7]],
-                                  [rect.topleft for rect in self.box_rects[13:14]],
-                                  [rect.topleft for rect in self.box_rects[15:16]])
+        current_positions = [
+            self.box_rects[self.correct_positions[0][0]].topleft,
+            self.box_rects[self.correct_positions[0][1]].topleft,
+            self.box_rects[self.correct_positions[0][2]].topleft,
+            self.box_rects[self.correct_positions[0][3]].topleft,
+            self.box_rects[self.correct_positions[0][4]].topleft,
+            self.box_rects[self.correct_positions[0][5]].topleft,
+            self.box_rects[self.correct_positions[0][6]].topleft,
+            self.box_rects[self.correct_positions[0][7]].topleft,
+            self.box_rects[self.correct_positions[0][8]].topleft,
+        ]
         return (current_positions == correct_position1 or current_positions == correct_position2 or
                 current_positions == correct_position3 or current_positions == correct_position4 or
                 current_positions == correct_position5 or current_positions == correct_position6 or
@@ -123,6 +173,7 @@ class Boxes:
         self.game.screen.blit(text, (540, 360))
         pygame.display.flip()
         pygame.time.wait(2000)
+        CoinManager.add_coins(20)  # Reward 20 coins after winning
         self.game.running = False  # Stop the game loop
 
     def display_lose_message(self):
@@ -141,6 +192,11 @@ class Boxes:
         pygame.display.flip()
         pygame.time.wait(2000)
         #self.game.running = False  # Stop the game loop
+
+    def draw_hint_button(self, screen):
+        pygame.draw.rect(screen, self.hint_button_color, self.hint_button)
+        hint_text = self.hint_font.render("Use Hint (-10 Coins)", True, self.hint_text_color)
+        screen.blit(hint_text, (self.hint_button.x + 10, self.hint_button.y + 10))
 
 
     def clicks(self, mouse_pos):
@@ -190,6 +246,8 @@ class Game:
         image_path2 = os.path.join(base_path, "medium", "Detective", "b.png")
         image_path3 = os.path.join(base_path, "medium", "Detective", "c.png")
         image_path4 = os.path.join(base_path, "medium", "Detective", "d.png")
+        self.hint_font = pygame.font.Font('freesansbold.ttf', 24)
+        self.coin_font = pygame.font.Font('freesansbold.ttf', 24)
 
         self.background = pygame.image.load('edc.jpg')
         self.logo = pygame.image.load("logs-removebg-preview.png")
@@ -232,10 +290,18 @@ class Game:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
+
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    if pygame.mouse.get_pressed()[0]:  # Left click
-                        click = True
-                    if pygame.mouse.get_pressed()[2]:  # Right click
+                    if event.button == 1:  # Left click
+                        if self.boxes.hint_button.collidepoint(mouse_pos):
+                            if self.boxes.use_hint():
+                                print("Hint used!")
+                            else:
+                                print("Not enough coins for hint!")
+                        else:
+                            click = True
+
+                    elif event.button == 3:  # Right click
                         back_click = True
 
             if click:
@@ -256,8 +322,16 @@ class Game:
         self.screen.blit(self.picture_three, (488, 252))
         self.screen.blit(self.picture_four, (642, 252))
 
+        pygame.draw.rect(self.screen, (0, 255, 0), self.boxes.hint_button)
+        hint_text = self.hint_font.render("Hint (10)", True, (255, 255, 255))
+        hint_rect = hint_text.get_rect(center=self.boxes.hint_button.center)
+        self.screen.blit(hint_text, hint_rect)
+
         for k, rect in enumerate(self.boxes.answer_box_rects):
             self.screen.blit(self.boxes.answer_box[k], rect)
+
+        self.boxes.draw_hint_button(self.screen)
+
 
         for j, rect in enumerate(self.boxes.black_box_rects):
             self.screen.blit(self.boxes.black_box[j], rect)
@@ -289,7 +363,6 @@ class Game:
         ]
         letter_rect = other_texts[index].get_rect(center=self.boxes.letter_positions[index + 9].center)
         return other_texts[index], letter_rect
-
 
 if __name__ == "__main__":
     game = Game()

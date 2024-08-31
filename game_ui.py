@@ -1,4 +1,5 @@
 import pygame
+from coin_manager import CoinManager
 
 from games.Easy1 import Game as Easy1
 from games.Easy2 import Game as Easy2
@@ -25,6 +26,7 @@ class GameUI:
         self.mode = mode  # Could be 'easy', 'medium', or 'hard'
         self.width, self.height = self.screen.get_size()
         self.clock = pygame.time.Clock()
+        #self.hint_button = pygame.Rect(50, 50, 100, 40)  # Position and size of hint button
 
         self.bg = pygame.image.load("t1.png")
         self.bg = pygame.transform.scale(self.bg, (self.width, self.height))
@@ -94,6 +96,14 @@ class GameUI:
 
         return False
 
+    def use_hint(self):
+        if CoinManager.use_coins(10):  # Deduct coins using CoinManager
+            # Logic to reveal a letter in the word
+            # You'll need to modify your game logic to accommodate this
+            print("Hint used!")  # For debugging
+        else:
+            print("Not enough coins!")  # For debugging
+
     def update(self):
         # Add any update logic for the Boxes instance
         pass
@@ -118,6 +128,8 @@ class GameUI:
         ]
         pygame.draw.polygon(self.screen, arrow_color, arrow_points)
 
+        self.draw_coin_counter()
+
         # Draw panel
         pygame.draw.rect(self.screen, self.panel_border_color, self.panel_rect, border_radius=20)
         pygame.draw.rect(self.screen, self.panel_color, self.panel_rect.inflate(-20, -20), border_radius=20)
@@ -137,3 +149,12 @@ class GameUI:
 
         pygame.display.flip()
         self.clock.tick(60)
+
+    def draw_coin_counter(self):
+        # Display coins from CoinManager
+        pygame.draw.rect(self.screen, (255, 192, 203), (self.width - 130, 20, 110, 40), border_radius=20)
+        pygame.draw.circle(self.screen, (255, 255, 0), (self.width - 110, 40), 15)
+        pygame.draw.circle(self.screen, (0, 0, 0), (self.width - 110, 40), 15, 2)
+        coin_text = pygame.font.Font(None, 36).render(str(CoinManager.get_coins()), True, (255, 255, 255))
+        coin_rect = coin_text.get_rect(center=(self.width - 60, 40))
+        self.screen.blit(coin_text, coin_rect)
