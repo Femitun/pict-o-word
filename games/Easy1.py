@@ -105,7 +105,7 @@ class Boxes:
         text = font.render(message, True, color)
         self.game.screen.blit(text, position)
         pygame.display.flip()
-        pygame.time.wait(1000)  # Wait for a second to show the message
+        pygame.time.wait(500)  # Wait for a second to show the message
 
     def reveal_letter(self):
         for i in range(len(self.movement_positions)):
