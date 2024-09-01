@@ -143,7 +143,7 @@ class Boxes:
         self.game.screen.blit(text, (540, 360))
         pygame.display.flip()
         pygame.time.wait(2000)
-        CoinManager.add_coins(20)  # Reward 20 coins after winning
+        CoinManager.add_coins(5  # Reward 20 coins after winning
         self.game.running = False  # Stop the game loop
 
     def display_lose_message(self):
