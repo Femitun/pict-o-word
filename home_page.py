@@ -180,17 +180,38 @@ class HomePage:
 
         options = ["Music", "Volume", "Need Help?"]
         for i, option in enumerate(options):
-            text = self.button_font.render(option, True, self.WHITE)
-            settings_surface.blit(text, (70, 100 + i * 60))
-            settings_surface.blit(self.icons[option], (30, 95 + i * 60))
+            # Change both text and icon color for the "Music" option based on music state
+            text_color = self.YELLOW if option == "Music" and self.music_on else self.WHITE
+            icon_color = text_color  # Make icon color same as text color
 
-            # Draw slider for volume control
+            # Render the option text (e.g., "Music", "Volume", etc.) with the appropriate color
+            text = self.button_font.render(option, True, text_color)
+            settings_surface.blit(text, (70, 100 + i * 60))
+
+            # Draw the icon for each setting option
+            self.draw_icon(settings_surface, option, (30, 95 + i * 60), icon_color)
+
+            # Draw the volume slider for the "Volume" option
             if option == "Volume":
                 pygame.draw.rect(settings_surface, self.WHITE, (70, 140 + i * 60, 160, 4))
                 slider_pos = 70 + int(160 * self.volume_level)
                 pygame.draw.circle(settings_surface, self.WHITE, (slider_pos, 142 + i * 60), 8)
 
         self.screen.blit(settings_surface, (self.width // 2 - 150, self.height // 2 - 200))
+
+    def draw_icon(self, surface, option, pos, color):
+        if option == "Music":
+            pygame.draw.circle(surface, color, (pos[0] + 15, pos[1] + 15), 10, 2)
+            pygame.draw.line(surface, color, (pos[0] + 25, pos[1] + 15), (pos[0] + 25, pos[1] + 5), 2)
+        elif option == "Volume":
+            pygame.draw.polygon(surface, color,
+                                [(pos[0] + 5, pos[1] + 15), (pos[0] + 15, pos[1] + 5), (pos[0] + 15, pos[1] + 25)])
+            pygame.draw.arc(surface, color, (pos[0] + 15, pos[1] + 5, 10, 20), -math.pi / 3, math.pi / 3, 2)
+        elif option == "Need Help?":
+            pygame.draw.circle(surface, color, (pos[0] + 15, pos[1] + 15), 13, 2)
+            font = pygame.font.Font(None, 24)
+            text = font.render("?", True, color)
+            surface.blit(text, (pos[0] + 11, pos[1] + 8))
 
     def draw_help_text(self):
         help_surface_height = 360
@@ -202,10 +223,11 @@ class HomePage:
             "Left-click to select and input a letter, Right-click to drop the letter.",
             "There are 3 different difficulties that a user can access, click arrows to navigate",
             "For easy, you have only 1 guess, for medium, 2 and 3 for hard",
-            "To exit a selected game,  close the window, "
+            "Maximize screen by clicking F11",
+            "To exit a selected game,  close the window,"
             "you'll be automatically taken to the game selection interface",
             "Click the hint button to reveal a letter for 10 coins",
-            "You gain 20 coins with every win",
+            "You gain 5 coins with every win",
             "Good luck!"
         ]
         y_offset = 15  # Start drawing text from this y-coordinate within help_surface

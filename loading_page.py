@@ -25,6 +25,9 @@ class LoadingPage:
         self.WHITE = (255, 255, 255)
         self.font = pygame.font.Font(None, 36)
 
+        # Load a custom fancy font for the "Word of the Day"
+        self.word_font = pygame.font.Font('fancy_font.ttf', 35)  # Use a larger size for emphasis
+
         # List of words that fit the narrative
         self.words_of_the_day = [
             "Claustrophobic", "Enigma", "Labyrinth", "Mystic", "Ephemeral",
@@ -50,22 +53,30 @@ class LoadingPage:
         self.screen.blit(self.bg, (0, 0))
         self.screen.blit(self.logo, self.logo_rect)
 
+        # Draw loading bar
         pygame.draw.rect(self.screen, self.WHITE, (self.bar_x, self.bar_y, self.bar_width, self.bar_height), 2, border_radius=25)
         pygame.draw.rect(self.screen, self.YELLOW, (self.bar_x, self.bar_y, int(self.loading_progress), self.bar_height), 0, border_radius=25)
 
+        # Loading text
         loading_text = self.font.render("LOADING...", True, self.WHITE)
         text_x = self.bar_x + (self.bar_width - loading_text.get_width()) // 2
         text_y = self.bar_y + (self.bar_height - loading_text.get_height()) // 2
         shadow_text = self.font.render("LOADING...", True, (0, 0, 0))
 
-        self.screen.blit(shadow_text, (text_x + 2, text_y + 2))
+        self.screen.blit(shadow_text, (text_x + 2, text_y + 2))  # Shadow for loading text
         self.screen.blit(loading_text, (text_x, text_y))
 
-        word_text = self.font.render(f"Word of the day: {self.word_of_the_day}", True, self.WHITE)
+        # Word of the Day text with custom font and subtle shadow effect
+        word_text = self.word_font.render(f"Word of the day: {self.word_of_the_day}", True, self.WHITE)
+        word_text_shadow = self.word_font.render(f"Word of the day: {self.word_of_the_day}", True, (50, 50, 50))
         word_text_x = (self.width - word_text.get_width()) // 2
         word_text_y = self.bar_y + self.bar_height + 80
-        self.screen.blit(word_text, (word_text_x, word_text_y))
 
+        # Shadow effect for the Word of the Day text
+        self.screen.blit(word_text_shadow, (word_text_x + 2, word_text_y + 2))  # Subtle shadow
+        self.screen.blit(word_text, (word_text_x, word_text_y))  # Main text
+
+        # Shadow for the logo
         shadow_offset = (9, 9)
         self.screen.blit(self.shadow, (self.logo_rect.x + shadow_offset[0], self.logo_rect.y + shadow_offset[1]))
 
